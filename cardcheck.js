@@ -41,7 +41,7 @@ const validateCred = (array) => {
     let doubledOdds = odds.map(num => num * 2);
 
     // subtract 9 from each item of doubledOdds IF they are 10 or greater;
-    let stepThree = []; // initialize another fucking empty array
+    let stepThree = [];
     doubledOdds.forEach((element) => {
         if (element >= 10) {
         stepThree.push(element - 9);
@@ -64,7 +64,7 @@ const validateCred = (array) => {
 
 const findInvalidCards = (nestedArray) => {
     let invalids = [];
-    let valids = []; // hypothetically I could simply remove the portion of code that deals with valid cards
+    let valids = []; // I could simply remove the portion of code that deals with valid cards
     nestedArray.forEach((card) => {
         if (validateCred(card)) {
             valids.push(card);
@@ -103,4 +103,4 @@ const idInvalidCompanies = (nestedArray) => {
                 console.log(companies);
             }
 
-idInvalidCompanies([valid1, invalid1, mystery1, valid2, invalid2]);
+idInvalidCompanies([valid1, invalid1, mystery1, valid2, invalid2]); // Visa, Amex, Mastercard
