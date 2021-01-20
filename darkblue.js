@@ -36,3 +36,35 @@ class State {
     }
 } // persistent: updating game state creates a new state and leaves the old one intact
 
+class Vec {
+    constructor(x, y) {
+        this.x = x; 
+        this.y = y;
+    }
+    plus(other) {
+        return new Vec(
+            this.x + other.x, 
+            thix.y + other.y
+            );
+        }
+    times(factor) {
+        return new Vec(this.x * factor, this.y * factor);
+    } // multiply a speed vector by a time interval to calculate distance traveled
+}
+
+class Player {
+    constructor(pos, speed) {
+        this.pos = pos;
+        this.speed = speed;
+    }
+
+    get type() { return "player"; }
+
+    static create(pos) {
+        return new Player(pos.plus(new Vec(0, -0.5)), 
+                                   new Vec(0, 0));
+    } // player is one-and-a-half squares high, so initial position set to align with bottom
+}
+
+Player.prototype.size = new Vec(0.8, 1.5); // size property is the same for all instances
+// so we store it on the prototype rather than on the instances themselves 
