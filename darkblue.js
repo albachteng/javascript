@@ -147,5 +147,91 @@ function elt(name, attrs, ...children) {
     return dom; // returns the generated element
 } // nts: this seems like a pretty useful helper function to keep around!
 
+class DOMDisplay {
+    constructor(parent, level) {
+        this.dom = elt("div", {class: "game"}, drawGrid(level)); 
+        this.actorLayer = null; // track moving elements
+        parent.appendChild(this.dom);
+    }
 
+    clear() { this.dom.remove(); }
+}
+
+const scale = 20;
+
+function drawGrid(level) {
+    return elt("table", {
+        class: "background", 
+        style: `width: ${level.width * scale}px`
+    }, ...level.rows.map(row =>
+        elt("tr", {style: `height: ${scale}px`},
+            ...row.map(type => elt("td", {class: type})))
+    ));
+}
+
+function drawActors(actors) {
+    return elt("div", {}, ...actors.map(actor => {
+        let rect = elt("div", {class: `actor ${actor.type}`});
+        rect.style.width = `${actor.size.x * scale}px`;
+        rect.style.height = `${actor.size.y * scale}px`;
+        rect.style.left = `${actor.pos.x * scale}px`;
+        rect.style.top = `${actor.pos.y * scale}px`;
+        return rect;
+    }));
+}
+
+DOMDisplay.prototype.syncState = function(state) {
+    if (this.actorLayer) this.actorLayer.remove();
+    this.actorLayer = drawActors(state.actors);
+    this.dom.appendChild(this.actorLayer);
+    this.dom.className = `game ${state.status}`;
+    this.scrollPlayerIntoView(state);
+};
+
+DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
+    let width = this.dom.clientWidth;
+    let height = this.dom.clientHeight;
+    let margin = width / 3;
+
+    // the viewport
+    let left = this.dom.scrollLeft; 
+    let right = left + width;
+    let top = this.dom.scrollTop;
+    let bottom = top + height;
+
+    let player = state.player;
+    let center = player.pos.plus(player.size.times(0.5))
+                                            .times(scale);
+    if (center.x < left + margin) {
+        this.dom.scrollLeft = center.x - margin;
+    } else if (center.x > right - margin) {
+        this.domscrollLeft = center.x + margin - width;
+    }
+    if (center.y < top + margin) {
+        this.dom.scrollTop = center.y - margin;
+    } else if (center.y > bottom - margin) {
+        this.dom.scrollTop = center.y + margin - height;
+    }
+};
+
+let display = new DOMDisplay(document.body, simpleLevel);
+// note that this will display an error unless running in a browser
+display.syncState(State.start(simpleLevel));
+
+Level.prototype.touches = function(pos, size, type) {
+    var xStart = Math.floor(pos.x);
+    var xEnd = Math.ceil(pos.x + size.x);
+    var yStart = Math.floor(pos.y);
+    var yEnd = Math.ceil(pos.y + size.y);
+
+    for (var y = yStart; y < yEnd; y++) {
+        for (var x = xStart; x < xEnd; x++) {
+            let isOutside = x < 0 || x >= this.width ||
+                            y < 0 || y >= this.height;
+            let here = isOutside? "wall" : this.rows[y][x];
+            if (here == type) return true;
+        }
+    }
+    return false;
+}
 
