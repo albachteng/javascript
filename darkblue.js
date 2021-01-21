@@ -11,12 +11,14 @@ class Level {
         this.startActors = []; // moving elements
 
         this.rows = rows.map((row, y) => {
-            let type = levelChars[ch];
-            if (typeof type == "string") return type; 
-            this.startActors.push(
-                type.create(new Vec(x, y), ch));
-                return "empty";
-        })
+            return row.map((ch, x) => {
+                let type = levelChars[ch];
+                if (typeof type == "string") return type; 
+                this.startActors.push(
+                    type.create(new Vec(x, y), ch));
+                    return "empty";
+            });
+        });
     }
 }
 
@@ -36,7 +38,7 @@ class State {
     }
 } // persistent: updating game state creates a new state and leaves the old one intact
 
-class Vec {
+class Vec { // for two-dimensional values, including position and size
     constructor(x, y) {
         this.x = x; 
         this.y = y;
@@ -44,7 +46,7 @@ class Vec {
     plus(other) {
         return new Vec(
             this.x + other.x, 
-            thix.y + other.y
+            this.y + other.y
             );
         }
     times(factor) {
@@ -68,3 +70,82 @@ class Player {
 
 Player.prototype.size = new Vec(0.8, 1.5); // size property is the same for all instances
 // so we store it on the prototype rather than on the instances themselves 
+
+class Lava {
+    constructor(pos, speed, reset) {
+        this.pos = pos;
+        this.speed = speed;
+        this.reset = reset;
+    }
+
+    get type() { return "lava"; }
+
+    static create(pos, ch) {
+        if (ch == "=") {
+            return new Lava (pos, new Vec(2, 0));
+        } else if (ch == "|") {
+            return new Lava (pos, new Vec(0, 2));
+        } else if (ch == "v") {
+            return new Lava (pos, new Vec(0, 3), pos); // dripping lava returns to top
+        }
+    }
+}
+
+Lava.prototype.size = new Vec(1, 1);
+
+class Coin {
+    constructor(pos, basePos, wobble) {
+        this.pos = pos;
+        this.basePos = basePos;
+        this.wobble = wobble;
+    }
+
+    get type() { return "coin"; }
+
+    static create(pos) {
+        let basePos = pos.plus(new Vec(0.2, 0.1));
+        return new Coin (basePos, basePos, Math.random() * Math.PI * 2);
+    }
+}
+
+Coin.prototype.size = new Vec(0.6, 0.6);
+
+const levelChars = {
+    ".": "empty", 
+    "#": "wall", 
+    "+": "lava", 
+    "@": Player, 
+    "o": Coin, 
+    "=": Lava, 
+    "|": Lava, 
+    "v": Lava
+};
+
+let simpleLevelPlan = `
+......................
+..#................#..
+..#..............=.#..
+..#.........o.o....#..
+..#.@......#####...#..
+..#####............#..
+......#++++++++++++#..
+......##############..
+......................`;
+
+let simpleLevel = new Level(simpleLevelPlan);
+console.log(`${simpleLevel.width} by ${simpleLevel.height}`); // 22 by 9;
+
+function elt(name, attrs, ...children) {
+    // helper function creates an html element you name
+    let dom = document.createElement(name);
+    for (let attr of Object.keys(attrs)) {
+        dom.setAttribute(attr, attrs[attr]);
+    } // sets attributes from the provided attributes object
+    for (let child of children) {
+        dom.appendChild(child); // appends children from the children list
+    }
+    return dom; // returns the generated element
+} // nts: this seems like a pretty useful helper function to keep around!
+
+
+
