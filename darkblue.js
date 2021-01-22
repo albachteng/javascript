@@ -194,10 +194,8 @@ DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
     let margin = width / 3;
 
     // the viewport
-    let left = this.dom.scrollLeft; 
-    let right = left + width;
-    let top = this.dom.scrollTop;
-    let bottom = top + height;
+    let left = this.dom.scrollLeft, right = left + width;
+    let top = this.dom.scrollTop, bottom = top + height;
 
     let player = state.player;
     let center = player.pos.plus(player.size.times(0.5))
@@ -205,7 +203,7 @@ DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
     if (center.x < left + margin) {
         this.dom.scrollLeft = center.x - margin;
     } else if (center.x > right - margin) {
-        this.domscrollLeft = center.x + margin - width;
+        this.dom.scrollLeft = center.x + margin - width;
     }
     if (center.y < top + margin) {
         this.dom.scrollTop = center.y - margin;
@@ -214,9 +212,9 @@ DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
     }
 };
 
-let display = new DOMDisplay(document.body, simpleLevel);
+// let display = new DOMDisplay(document.body, simpleLevel);
 // note that this will display an error unless running in a browser
-display.syncState(State.start(simpleLevel));
+// display.syncState(State.start(simpleLevel));
 
 Level.prototype.touches = function(pos, size, type) {
     var xStart = Math.floor(pos.x);
@@ -228,7 +226,7 @@ Level.prototype.touches = function(pos, size, type) {
         for (var x = xStart; x < xEnd; x++) {
             let isOutside = x < 0 || x >= this.width ||
                             y < 0 || y >= this.height;
-            let here = isOutside? "wall" : this.rows[y][x];
+            let here = isOutside ? "wall" : this.rows[y][x];
             if (here == type) return true;
         }
     }
@@ -252,7 +250,7 @@ State.prototype.update = function(time, keys) {
             newState = actor.collide(newState);
         }
     }
-    return newState
+    return newState;
 };
 
 function overlap(actor1, actor2) {
@@ -272,3 +270,115 @@ Coin.prototype.collide = function(state) {
     if (!filtered.some(a => a.type == "coin")) status = "won";
     return new State (state.level, filtered, status);
 };
+
+// actor updates
+
+Lava.prototype.update = function(time, state) {
+    let newPos = this.pos.plus(this.speed.times(time));
+    if (!state.level.touches(newPos, this.size, "wall")) {
+        return new Lava(newPos, this.speed, this.reset);
+        // continues if no obstacles
+    } else if (this.reset) { // dripping lava has a reset property
+        return new Lava(this.reset, this.speed, this.reset);
+    } else { // otherwise bounces back
+        return new Lava(this.pos, this.speed.times(-1));
+    }
+};
+
+const wobbleSpeed = 8;
+const wobbleDist = 0.07;
+
+Coin.prototype.update = function(time) {
+    let wobble = this.wobble + time * wobbleSpeed;
+    let wobblePos = Math.sin(wobble) * wobbleDist;
+    return new Coin(this.basePos.plus(new Vec(0, wobblePos)), 
+                    this.basePos, wobble);
+};
+
+const playerXSpeed = 7;
+const gravity = 30;
+const jumpSpeed = 17;
+
+Player.prototype.update = function(time, state, keys) {
+    let xSpeed = 0;
+    if (keys.ArrowLeft) xSpeed -= playerXSpeed;
+    if (keys.ArrowRight) xSpeed += playerXSpeed;
+    let pos = this.pos;
+    let movedX = pos.plus(new Vec(xSpeed * time, 0));
+    if (!state.level.touches(movedX, this.size, "wall")) {
+        pos = movedX; // upate as long as there is no wall blocking movement
+    }
+// for the player, x and y speed are separate
+    let ySpeed = this.speed.y + time * gravity;
+    let movedY = pos.plus(new Vec(0, ySpeed * time));
+    if (!state.level.touches(movedY, this.size, "wall")) {
+        pos = movedY;
+    } else if (keys.ArrowUp && ySpeed > 0) {
+        ySpeed = -jumpSpeed; // if we're pressing up and not moving, we jump
+    } else {
+        ySpeed = 0; 
+    }
+    return new Player(pos, new Vec(xSpeed, ySpeed));
+};
+
+// tracking keys
+
+function trackKeys(keys) {
+    let down = Object.create(null);
+    function track(event) {
+        if (keys.includes(event.key)) {
+            down[event.key] = event.type == "keydown";
+            event.preventDefault();
+        }
+    }
+    window.addEventListener("keydown", track);
+    window.addEventListener("keyup", track);
+    return down;
+}
+
+var arrowKeys = trackKeys(["ArrowLeft", "ArrowRight", "ArrowUp"]);
+
+// running the game
+
+function runAnimation(frameFunc) {
+    let lastTime = null;
+    function frame(time) {
+        if (lastTime != null) {
+            let timeStep = Math.min(time - lastTime, 100) / 1000;
+            if (frameFunc(timeStep) === false) return;
+        }
+        lastTime = time;
+        requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+}
+
+function runLevel(level, Display) {
+    let display = new Display(document.body, level);
+    let state = State.start(level);
+    let ending = 1;
+    return new Promise(resolve => {
+        runAnimation(time => {
+            state = state.update(time, arrowKeys);
+            display.syncState(state);
+            if (state.status == "playing") {
+                return true;
+            } else if (ending > 0) {
+                ending -= time;
+                return true;
+            } else {
+                display.clear();
+                resolve(state.status);
+                return false;
+            }
+        });
+    });
+}
+
+async function runGame(plans, Display) {
+    for (let level = 0; level < plans.length;) {
+        let status = await runLevel(new Level(plans[level]), Display);
+        if (status == "won") level++;
+    }
+    console.log("You've won!");
+}
