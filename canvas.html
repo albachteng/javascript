@@ -19,17 +19,24 @@
         <p>End of SVG.</p>
         <p>Before canvas.</p>
         <canvas width="120" height="60"></canvas>
-        <p>After canvas. Another canvas below.</p>
+        <p>After canvas. Another canvas below: line width and style.</p>
         <canvas class="cx"></canvas>
-        <p>End second canvas. Third below.</p>
+        <p>End second canvas. Third below: moveTo method.</p>
         <canvas class="cx"></canvas>
-        <p>End third canvas. Start fourth below.</p>
+        <p>End third canvas. Start fourth: implicit fill.</p>
         <canvas class="cx"></canvas>
-        <p>End fourth canvas. Start fifth below.</p>
+        <p>End fourth canvas. Start fifth: quadratic curve method.</p>
         <canvas class="cx"></canvas>
-        <p>End fifth, start sixth.</p>
+        <p>End fifth, start sixth: bezier method</p>
+        <canvas class="cx"></canvas>
+        <p>End sixth, start seventh: arc method.</p>
+        <canvas class="cx"></canvas>
+        <p>End seventh. Start eighth.</p>
+        <canvas class="cx"></canvas>
+        <p>End eighth. Begin ninght.</p>
         <canvas class="cx"></canvas>
         <script>
+
             let circle = document.querySelector("circle");
             circle.setAttribute("fill", "cyan"); // overwrites red fill color in the svg above
         
@@ -85,6 +92,46 @@
             // the further the two control points are from their corresponding endpoints...
             //... the more the curve will "bulge" in that direction
             // can be VERY trial-and-error driven... 
+
+            let cx6 = document.getElementsByClassName("cx")[5].getContext("2d");
+            cx6.beginPath();
+            // center 50, 50 / radius 40 / angle 0 to 7 
+            cx6.arc(50, 50, 40, 0, 7);
+            // center 150, 50 / radius 40 / angle 0 to 1/2 pi
+            cx6.arc(150, 50, 40, 0, 0.5 * Math.PI); // 2PI is a full circle
+            cx6.stroke(); // note implicit stroke between the circles
+            //to avoid that, you could call moveTo
+
+            // pie chart drawing
+
+            const results = [
+                {name: "Satisfied", count: 1043, color: "lightblue"},
+                {name: "Neutral", count: 563, color: "lightgreen"},
+                {name: "Unsatisfied", count: 510, color: "pink"},
+                {name: "No comment", count: 175, color: "silver"}
+            ] // data
+            let cx7 = document.getElementsByClassName("cx")[6].getContext("2d");
+            cx7.canvas.height *= 1.5; // spent a lot of time figuring out that if you attempt...
+            //... to adjust the dimensions of the canvas AFTER drawing, the drawing is erased
+            // also note that to adjust the height of the cx7 element, we have to access the canvas
+            // this is because the variables we have set up are the CONTEXT, not the canvas itself
+            let total = results.reduce((sum, {count}) => sum + count, 0);
+                // start at the top
+            let currentAngle = -0.5 * Math.PI;
+            for (let result of results) {
+                let sliceAngle = (result.count / total) * 2 * Math.PI;
+                cx7.beginPath();
+                // center = 100, 100, radius = 100
+                // from current angle, clockwise by slice's angle
+                cx7.arc(100, 100, 100, currentAngle, currentAngle + sliceAngle);
+                currentAngle += sliceAngle;
+                cx7.lineTo(100, 100); // closing the slice back to center
+                cx7.fillStyle = result.color;
+                cx7.fill(); 
+            }
+            let cx8 = document.getElementsByClassName("cx")[7].getContext("2d");
+            
+            
         </script>
     </body>
 </html>
