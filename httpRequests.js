@@ -56,37 +56,37 @@ POST requests change something on the server, i.e. creating new account or posti
 
 // fetch requests - using promises
 
-fetch("example/data.txt").then(response => {
-    console.log(response.status); // 200
-    console.log(response.headers.get("Content-Type")); // text/plain
-}); 
-// this will return an error b/c fetch is a window method, which does not exist in node.js
+    fetch("example/data.txt").then(response => {
+        console.log(response.status); // 200
+        console.log(response.headers.get("Content-Type")); // text/plain
+    }); 
+    // this will return an error b/c fetch is a window method, which does not exist in node.js
 
-/* fetch returns a promise that resolves to a Response object
-Response holds information about the servers response, including status code and headers
-headers are in a Map-like object that treats keys as case-insensitive
-so "content-type" will return the same as "Content-Type" above */
+    /* fetch returns a promise that resolves to a Response object
+    Response holds information about the servers response, including status code and headers
+    headers are in a Map-like object that treats keys as case-insensitive
+    so "content-type" will return the same as "Content-Type" above */
 
-fetch("example/data.txt").then(response => response.text())
-                         .then(text => console.log(text));
-                         // expect text content of data.txt
+    fetch("example/data.txt").then(response => response.text())
+                             .then(text => console.log(text));
+                            // expect text content of data.txt
 
-/* note that fetch uses GET method to make its request by default
-to configure a different request, pass in an object as a second argument */ 
+    /* note that fetch uses GET method to make its request by default
+    to configure a different request, pass in an object as a second argument */ 
 
-fetch("example/data.txt", {method: "DELETE"}).then(response => {
-    console.log(response.status); // 405 method not allowed
-});
+    fetch("example/data.txt", {method: "DELETE"}).then(response => {
+        console.log(response.status); // 405 method not allowed
+    });
 
-// adding a request body can be done similarly
-fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
-    .then(response => response.text())
-    .then(console.log); // content
+    // adding a request body can be done similarly
+    fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
+        .then(response => response.text())
+        .then(console.log); // content
 
-/* the browser will automatically add some request headers to a fetch request
-"Host" and those needed for the server to figure out the size of the body */ 
+    /* the browser will automatically add some request headers to a fetch request
+    "Host" and those needed for the server to figure out the size of the body */ 
 
-// Include this header to allow cross-domain requests: {Access-Control-Allow-Origin: *}
+    // Include this header to allow cross-domain requests: {Access-Control-Allow-Origin: *}
 
 // Modeling communication between client and server: 
 
@@ -100,9 +100,9 @@ fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
 
 // Security & HTTPS
 
-/* before exchanging data, client has to prove to the server that it is who it claims to be
-it does so by providing a cryptographic certificate issued by some authority that the browser recognizes.
-All data going over the connection is encrypted. */
+    /* before exchanging data, client has to prove to the server that it is who it claims to be
+    it does so by providing a cryptographic certificate issued by some authority that the browser recognizes.
+    All data going over the connection is encrypted. */
 
 // Forms
 
@@ -143,16 +143,16 @@ console.log(document.activeElement.tagName); // expect "BODY"
 
 // Disabled Fields
 
-/* add a disabled attribute - it doesn't even need a value
-good idea to use this while some action might prevent the normal use of the control field, 
-i.e. while waiting for a response from a server */ 
+    /* add a disabled attribute - it doesn't even need a value
+    good idea to use this while some action might prevent the normal use of the control field, 
+    i.e. while waiting for a response from a server */ 
 
 // form as a whole - name attribute, form property and elements property
 
-/* form fields within a <form> element will have a form property linking back to the form's DOM element 
-The <form> element itself has an elements property that contains an array-like / map-like collection of the fields
-name attribute determines the way a form field's value will be identified when submitted. 
-It can also be used as property name when accessing the form's elements property. */ 
+    /* form fields within a <form> element will have a form property linking back to the form's DOM element 
+    The <form> element itself has an elements property that contains an array-like / map-like collection of the fields
+    name attribute determines the way a form field's value will be identified when submitted. 
+    It can also be used as property name when accessing the form's elements property. */ 
 
     {<body>
         <form action="example/submit.html">
@@ -172,24 +172,95 @@ It can also be used as property name when accessing the form's elements property
 
 // text fields
 
-/* "value" property on textarea, input or fields with type text or password share interface
-selectionStart and selectionEnd properties of text fields tell us cursor and selection location
-"change" event for a field fires after the field loses focus after its content was changed
-"input" event fires every time the user types a character, deletes text or manipulates its content */ 
+    /* "value" property on textarea, input or fields with type text or password share interface
+    selectionStart and selectionEnd properties of text fields tell us cursor and selection location
+    "change" event for a field fires after the field loses focus after its content was changed
+    "input" event fires every time the user types a character, deletes text or manipulates its content */ 
 
 // checkboxes and radio buttons
 
-/* "checked" property holds boolean value
-<label> tag associates a piece of the doc with an input field
-clicking on the label (by default) activates the field, toggling checkboxes and radio buttons
-this also focuses the label's field */ 
+    /* "checked" property holds boolean value
+    <label> tag associates a piece of the doc with an input field
+    clicking on the label (by default) activates the field, toggling checkboxes and radio buttons
+    this also focuses the label's field */ 
 
-/* <select> fields appear as a list of checkboxes when given the "multiple" attribute
-such select fields may contain <options> tag that can be accessed like a list through the 
-"options" property */ 
+    /* <select> fields appear as a list of checkboxes when given the "multiple" attribute
+    such select fields may contain <options> tag that can be accessed like a list through the 
+    "options" property */ 
 
     <select multiple>
         <option value="1">Option 1</option>
         ...etc
     </select>
+
+// file reader 
+
+    /* uploading docs to an input with type="file" produces a field element with a "files" property
+    which is a list-like object containing the files uploaded in the field. It supports the multiple 
+    attribute, which makes it possible to upload several files at once*/ 
+
+    /* reading a file can be accomplished by creating a new FileReader object and calling its
+    readAsText method, passing it a fiel we want to read. It is wise to register a "load" event 
+    handler for it, because we can't guarantee the file has loaded otherwise without wrapping it in 
+    a promise. */ 
+
+// Local Storage
+
+    // localStorage object can be used to store data in a way that survives page reloads.
+
+    localStorage.setItem("username", "graham");
+    console.log(localStorage.getItem("username")); // "graham"
+    localStorage.removeItem("username"); 
+
+    // sites from different domains get different localStorage 'compartments'
+
+    // example: basic note-taking application (not my own work)
+
+    <div>
+    Notes: <select></select> <button>Add</button> <br></br>
+           <textarea style="width: 100%"></textarea>
+        <script>
+            let list = document.querySelector("select");
+            let note = document.querySelector("textarea");
+
+            let state;
+            
+            function setState(newState) {
+                list.textContent = "";
+                for (let name of Object.keys(newState.notes)) {
+                    let option = document.createElement("option");
+                    option.textContent = name;
+                    if (newState.selected == name) option.selected = true;
+                    list.appendChild(option)
+                }
+                note.value = newState.notes[newState.selected];
+
+                localStorage.setItem("Notes", JSON.stringify(newState));
+                state = newState;
+            }
+
+            setState(JSON.parse(localStorage.getItem("Notes")) || {
+                notes: {"shopping list": "Carrots\nRaisins"},
+                selected: "shopping list"
+            });
+
+            list.addEventListener("change", () => {
+                setSTate({notes: StaticRange.notes, selected: list.value});
+            });
+            note.addEventListener("change", () => {
+                setState({
+                    notes: Object.assign({}, state.notes,
+                                        {[state.selected]: note.value}),
+                    selected: state.selected
+                });
+            });
+            document.querySelector("button").addEventListener("click", () => {
+                let name = prompt("note name");
+                if (name) setSTate({
+                    notes: Object.assign({}, state.notes, {[name]: ""}),
+                    selected: name
+                });
+            });
+        </script>
+    </div>
 
