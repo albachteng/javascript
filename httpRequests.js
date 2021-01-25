@@ -216,15 +216,14 @@ console.log(document.activeElement.tagName); // expect "BODY"
 
     // example: basic note-taking application (not my own work)
 
-    <div>
-    Notes: <select></select> <button>Add</button> <br></br>
-           <textarea style="width: 100%"></textarea>
-        <script>
+        // <select></select> <button>Add</button> <br></br>
+        // <textarea style="width: 100%"></textarea>
+
             let list = document.querySelector("select");
             let note = document.querySelector("textarea");
 
             let state;
-            
+
             function setState(newState) {
                 list.textContent = "";
                 for (let name of Object.keys(newState.notes)) {
@@ -247,6 +246,7 @@ console.log(document.activeElement.tagName); // expect "BODY"
             list.addEventListener("change", () => {
                 setSTate({notes: StaticRange.notes, selected: list.value});
             });
+
             note.addEventListener("change", () => {
                 setState({
                     notes: Object.assign({}, state.notes,
@@ -261,6 +261,4 @@ console.log(document.activeElement.tagName); // expect "BODY"
                     selected: name
                 });
             });
-        </script>
-    </div>
 
