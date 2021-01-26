@@ -33,7 +33,11 @@
         <canvas class="cx"></canvas>
         <p>End seventh. Start eighth.</p>
         <canvas class="cx"></canvas>
-        <p>End eighth. Begin ninght.</p>
+        <p>End eighth. Begin ninth.</p>
+        <canvas class="cx"></canvas>
+        <p>Ninth / 10th</p>
+        <canvas class="cx"></canvas>
+        <p>10 / 11</p>
         <canvas class="cx"></canvas>
         <script>
 
@@ -130,8 +134,36 @@
                 cx7.fill(); 
             }
             let cx8 = document.getElementsByClassName("cx")[7].getContext("2d");
-            
-            
+            cx8.font = "28px Georgia";
+            cx8.fillStyle = "fuchsia";
+            cx8.fillText("I can draw text, too!", 10, 50);
+            // cx8.textBaseline = "top";
+            // cx8.textAlign = "bottom"; 
+            // kinda ugly style but you get the point
+
+            let cx9 = document.getElementsByClassName("cx")[8].getContext("2d");
+            let img = document.createElement("img");
+            img.src = "./player_big.png";
+            let spriteW = 48, spriteH = 60;
+            img.addEventListener("load", () => {
+                let cycle = 0;
+                cx9.scale(2,2); // causes everything drawn AFTER to be scaled 
+                setInterval(() => {
+                    cx9.clearRect(0, 0, spriteW, spriteH);
+                    cx9.drawImage(img, 
+                                cycle * spriteW, 0, spriteW, spriteH, 
+                                0, 0, spriteW, spriteH);
+                    cycle = (cycle + 1) % 8;
+                }, 120);
+            });
+
+            // flip an image
+            function flipHorizontally(context, around) {
+                context.translate(around, 0);
+                context.scale(-1, 1);
+                context.translate(-around, 0);
+            };
+
         </script>
     </body>
 </html>
