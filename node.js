@@ -1,4 +1,4 @@
-// Chapter 19 Eloquent JavaScript - notes and exercises
+// Chapter 20 Eloquent JavaScript - notes and exercises
 // most of this code is not my own original work - see eloquentjavascript.net
 
 // NODE - differences to browser-based JS
@@ -92,4 +92,109 @@
 
     // "npm publish" can publish a package with name and version listed in the json file. 
 
+// FILE SYSTEM MODULE
+
+    /* The "fs" module exports functions for working with files and directories. 
+    The readFile function reads a file and then calls a callback with its contents. */ 
+
+        let {readFile} = require("fs");
+        readFile("file.txt", "utf8", (error, text) => {
+            if (error) throw error;
+            console.log("The file contains:", text);
+        });
+
+    // note that by default the character encoding is binary and returns a Buffer object
+    // it's pretty much always utf8
+
+    // writeFile used to write a file to disk
+    // unlink deletes a file
+
+        const {writeFile, unlink} = require("fs"); 
+
+        writeFile("graffiti.txt", "Node was here", err => {
+            if (err) console.log(`Failed to write file: ${err}`);
+            else console.log(`File written.`);
+
+            // cleaning up after myself
+            unlink("./graffiti.txt", err => {
+                if (err) console.log(`${err}`);
+                else console.log('File deleted.');
+            });
+        });
+
+    // writeFile will assume UTF-8 if passed a string
     
+    /* Most of the functions in the fs module take a callback as last parameter.
+    These callbacks are called either with an error (first argument) or with a 
+    successful result (the second). */ 
+
+    // ! import promise-based functions by appending .promises to the require
+
+        // const {readFile} = require('fs').promises;
+        // readFile("file.txt", "utf8")
+        //     .then(text => console.log("The file contains:", text));
+
+    // Also has synchronous (blocking) versions with Sync appended to function name
+
+// HTTP MODULE
+
+    // creating a basic HTTP server: 
+
+        const {createServer} = require("http");
+        let server = createServer((request, response) => {
+            response.writeHead(200, {"Content-Type": "text/html"});
+            response.write(`
+                <h1>Hello!</h1>
+                <p>You asked for <code>${request.url}</code></p>`);
+            response.end();
+        });
+        server.listen(8000); // note that default port is 80
+        console.log("Listening! (port 8000)");
+
+    // after running this code, you can go to localhost:8000/hello and see the response
+
+    /* Function passed as argument to createServer is called every time a client 
+    connects. "request" and "response" objects represent incoming and outgoing data.*/
+
+    // ! listening process continues after you run node.js, control-C to close it 
+
+        const {request} = require("http");
+        let requestStream = request({
+            hostname: "eloquentjavascript.net",
+            path: "/20_node.html", 
+            method: "GET", 
+            headers: {Accept: "text/html"}
+        }, response => {
+            console.log("Server responded with status code", response.statusCode);
+        });
+        requestStream.end();
+
+    /* first argument to request configures the request, second is the function 
+    to call when a response comes back. It is given a response object to inspect.*/ 
+
+    /* all that being said, 'node-fetch' or similar NPM packages are more convenient than 
+    using the raw http functionality in Node. 'Node-fetch' has the advantage of being promise-based
+    just like what we use in the browser.*/
+
+// STREAMS
+
+    /* Request object and response object are writable streams: they have a "write" method
+    that can be passed a string or Buffer object. Their "end" method closes the stream and 
+    optionally takes a value to write to the stream before closing. Both "write" and "end"
+    can also be given an additional callback argument, which calls when the writing or 
+    closing has finished.*/ 
+
+    /* Reading from streams use event handlers rather than methods. Objects that emit events
+    in Node have an "on" method similar to addEventListener method in the browser. It is passed
+    an event name and a function. It will call that function whenever the given event occurs.*/
+    
+    /* Readable streams have "data" and "end" events. First fired whenever data comes in, second
+    is called whenever the stream is at its end. "fs" module has a function createReadStream that
+    can allow a file to be read as a readable stream.*/
+    
+        const {createServer} = require("http");
+        createServer((request, response) => {
+            response.writeHead(200, {"Content-Type": "text/plain"});
+            request.on("data", chunk => response.write(chunk.toString().toUpperCase()));
+            request.on("end", () => response.end());
+        }).listen(8000);
