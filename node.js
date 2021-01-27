@@ -109,7 +109,7 @@
     // writeFile used to write a file to disk
     // unlink deletes a file
 
-        const {writeFile, unlink} = require("fs"); 
+        const {writeFile} = require("fs"); 
 
         writeFile("graffiti.txt", "Node was here", err => {
             if (err) console.log(`Failed to write file: ${err}`);
@@ -140,7 +140,7 @@
 
     // creating a basic HTTP server: 
 
-        // const {createServer} = require("http");
+        const {createServer} = require("http");
         // let server = createServer((request, response) => {
         //     response.writeHead(200, {"Content-Type": "text/html"});
         //     response.write(`
@@ -284,3 +284,40 @@
         };
 
         const {rmdir, unlink} = require("fs").promises;
+
+        methods.DELETE = async function(request) {
+            let path = urlPath(request.url);
+            let stats;
+            try {
+                stats = await stat(path); 
+            } catch (error) {
+                if (error.code != "ENOENT") throw error;
+                else return {status: 204}; // "no content" therefore nothing to delete
+            } // "idempotent" - same request multiple times produces the same result
+            // this is why attempting to delete a nonexistent file returns a "success" status
+            if (stats.isDirectory()) await rmdir(path);
+            else await unlink(path);
+            return {status: 204};
+        };
+
+        const {createWriteStream} = require("fs"); 
+
+        function pipeStream(from, to) {
+            return new Promise((resolve, reject) => {
+                from.on("error", reject); 
+                to.on("error", reject);
+                to.on("finish", resolve); 
+                from.pipe(to); 
+            });
+        }
+
+        methods.PUT = async function(request) {
+            let path = urlPath(request.url);
+            await pipeStream(request, createWriteStream(path));
+            return {status: 204};
+        };
+
+    /* no need to check for existence since we would just overwrite it with a PUT request. 
+    We use pipe to move data from a readable stream to a writable one (from the request to 
+    the file). We wrap a function around pipe to generate a Promise. Wire up promise rejections
+    for possible errors in case network goes down during write or retrieve steps.  */ 
