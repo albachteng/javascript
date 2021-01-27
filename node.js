@@ -321,3 +321,9 @@
     We use pipe to move data from a readable stream to a writable one (from the request to 
     the file). We wrap a function around pipe to generate a Promise. Wire up promise rejections
     for possible errors in case network goes down during write or retrieve steps.  */ 
+
+    /* you can test the server after running this script with the curl command 
+    i.e. curl http://localhost:8000/file.txt => "I am a file and you can put documents in me"
+    curl -X PUT -d hello http://localhost:8000/hello.txt => create hello.txt w/ "hello"
+    -X option is used to set the request's method, -d is used to include a request body. 
+    try it with DELETE method as well, etc. */ 
