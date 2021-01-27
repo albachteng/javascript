@@ -4,11 +4,16 @@
 
 
 const euler1 = function() {
-    let results = [],
+    let results = [];
     // iterate through numbers zero through 1000
-    // push numbers divisible by 3 or 5 to an array
+    for (let i = 0; i < 1000; i++) {
+    // if divisible by 3 or 5, push to results array
+        if (i % 3 == 0 || i % 5 == 0) {
+            results.push(i);
+        }
+    }
     // reduce the array by summing them
-
-    for (let i = 0; i < 1000)
-
+    return results.reduce((a, b) => a + b);
 }
+
+console.log(euler1());
