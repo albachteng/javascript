@@ -97,7 +97,7 @@
     /* The "fs" module exports functions for working with files and directories. 
     The readFile function reads a file and then calls a callback with its contents. */ 
 
-        let {readFile} = require("fs");
+        let {readFile, createReadStream} = require("fs");
         readFile("file.txt", "utf8", (error, text) => {
             if (error) throw error;
             console.log("The file contains:", text);
@@ -140,16 +140,16 @@
 
     // creating a basic HTTP server: 
 
-        const {createServer} = require("http");
-        let server = createServer((request, response) => {
-            response.writeHead(200, {"Content-Type": "text/html"});
-            response.write(`
-                <h1>Hello!</h1>
-                <p>You asked for <code>${request.url}</code></p>`);
-            response.end();
-        });
-        server.listen(8000); // note that default port is 80
-        console.log("Listening! (port 8000)");
+        // const {createServer} = require("http");
+        // let server = createServer((request, response) => {
+        //     response.writeHead(200, {"Content-Type": "text/html"});
+        //     response.write(`
+        //         <h1>Hello!</h1>
+        //         <p>You asked for <code>${request.url}</code></p>`);
+        //     response.end();
+        // });
+        // server.listen(8000); // note that default port is 80
+        // console.log("Listening! (port 8000)");
 
     // after running this code, you can go to localhost:8000/hello and see the response
 
@@ -158,16 +158,16 @@
 
     // ! listening process continues after you run node.js, control-C to close it 
 
-        const {request} = require("http");
-        let requestStream = request({
-            hostname: "eloquentjavascript.net",
-            path: "/20_node.html", 
-            method: "GET", 
-            headers: {Accept: "text/html"}
-        }, response => {
-            console.log("Server responded with status code", response.statusCode);
-        });
-        requestStream.end();
+        // const {request} = require("http");
+        // let requestStream = request({
+        //     hostname: "eloquentjavascript.net",
+        //     path: "/20_node.html", 
+        //     method: "GET", 
+        //     headers: {Accept: "text/html"}
+        // }, response => {
+        //     console.log("Server responded with status code", response.statusCode);
+        // });
+        // requestStream.end();
 
     /* first argument to 'request' configures the request, second is the function 
     to call when a response comes back. It is given a 'response' object to inspect.*/ 
@@ -193,24 +193,94 @@
     "fs" module has a function 'createReadStream' that can allow a file to be read as a readable stream.*/
     
     // This code creates a server that reads request bodies and streams themback to the client in uppercase text
-        createServer((request, response) => {
-            response.writeHead(200, {"Content-Type": "text/plain"});
-            request.on("data", chunk => response.write(chunk.toString().toUpperCase()));
-            request.on("end", () => response.end());
-        }).listen(8000);
+        // createServer((request, response) => {
+        //     response.writeHead(200, {"Content-Type": "text/plain"});
+        //     request.on("data", chunk => response.write(chunk.toString().toUpperCase()));
+        //     request.on("end", () => response.end());
+        // }).listen(8000);
 
-        request({
-            hostname: "localhost",
-            port: 8000,
-            method: "POST",
-        }, response => {
-            response.on("data", chunk => 
-                process.stdout.write(chunk.toString()));
-        }).end("hello server"); // expect "HELLO SERVER"
+        // request({
+        //     hostname: "localhost",
+        //     port: 8000,
+        //     method: "POST",
+        // }, response => {
+        //     response.on("data", chunk => 
+        //         process.stdout.write(chunk.toString()));
+        // }).end("hello server"); // expect "HELLO SERVER"
 
     // note that this example writes to process.stdout instead of console.log
     // console.log adds newlines after each piece of text it writes, which would be messy
 
 // A FILE SERVER
 
-    
+        const methods = Object.create(null); 
+
+        createServer((request, response) => {
+            let handler = methods[request.method] || notAllowed;
+            handler(request)
+                .catch(error => {
+                    if (error.status != null) return error;
+                    return {body: String(error), status: 500}; 
+                }) // translates error into a response object
+                // note that status defaults to 200 if omitted
+                .then(({body, status = 200, type = "text/plain"}) => {
+                    response.writeHead(status, {"Content-Type": type});
+                    if (body && body.pipe) body.pipe(response);
+                    // pipe method forwards all content from readable stream to writable stream
+                    else response.end(body); 
+                }); // if body is null, a string or a buffer, it is passed directly to the response.end method
+        }).listen(8000);
+
+        async function notAllowed(request) {
+            return {
+                status: 405, 
+                body: `Method ${request.method} not allowed.`
+            };
+        }
+
+    // starts a server that only returns a 405 error response: method not allowed.
+
+    // Use urlPath function from Node's url module to parse the URL
+
+        const {parse} = require("url"); 
+        const {resolve, sep} = require("path"); 
+
+    // sep binding resolves system's path separator - backslash on Windows, forward slash on most others
+
+        const baseDirectory = process.cwd(); // sets "baseDirectory" to current working directory
+
+        function urlPath(url) {
+            let {pathname} = parse(url); 
+            let path = resolve(decodeURIComponent(pathname).slice(1)); // resolves relative paths
+            if (path != baseDirectory && // verify this path is *below* the cwd
+                    !path.startsWith(baseDirectory + sep)) {
+                throw {status: 403, body: "Forbidden"};
+            } // throws an error if the directory is forbidden
+            return path; // returns the parsed url (unless it is of the incorrect directory)
+        }
+
+    // run npm mime@2.2.0 to install the MIME package for determining correct type for files
+
+        const {stat, readdir} = require("fs").promises; // async bc must touch the disk and may be slow
+    // stat function looks up information about a file, including whether it exists / is a directory
+        const mime = require("mime");
+
+        methods.GET = async function(request) {
+            let path = urlPath(request.url);
+            let stats;
+            try {
+                stats = await stat(path);
+            } catch (error) {
+                if (error.code != "ENOENT") throw error; // error.code "ENOENT" = does not exist
+                else return {status: 404, body: "File not found"}; 
+            }
+            if (stats.isDirectory()) {
+                return {body: (await readdir(path)).join("\n")};
+                // if it is a directory, we return the list of files
+            } else {
+                return {body: createReadStream(path),
+                        type: mime.getType(path)};
+            }
+        };
+
+        const {rmdir, unlink} = require("fs").promises;
