@@ -3,7 +3,6 @@
 
 
 
-// this should likely involve memoization since there are so many terms...
 
 const euler2 = function() {
     let numbers = [1, 2];
