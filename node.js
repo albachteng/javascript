@@ -169,8 +169,8 @@
         });
         requestStream.end();
 
-    /* first argument to request configures the request, second is the function 
-    to call when a response comes back. It is given a response object to inspect.*/ 
+    /* first argument to 'request' configures the request, second is the function 
+    to call when a response comes back. It is given a 'response' object to inspect.*/ 
 
     /* all that being said, 'node-fetch' or similar NPM packages are more convenient than 
     using the raw http functionality in Node. 'Node-fetch' has the advantage of being promise-based
@@ -178,23 +178,39 @@
 
 // STREAMS
 
-    /* Request object and response object are writable streams: they have a "write" method
-    that can be passed a string or Buffer object. Their "end" method closes the stream and 
+    /* 'Request' object and 'response' object are *writable streams*: they have a "write" method
+    that can be passed a string or "Buffer" object. Their "end" method closes the stream and 
     optionally takes a value to write to the stream before closing. Both "write" and "end"
     can also be given an additional callback argument, which calls when the writing or 
-    closing has finished.*/ 
+    closing has finished.*/
 
-    /* Reading from streams use event handlers rather than methods. Objects that emit events
+    /* Readable streams use event handlers (rather than methods). Objects that emit events
     in Node have an "on" method similar to addEventListener method in the browser. It is passed
     an event name and a function. It will call that function whenever the given event occurs.*/
     
-    /* Readable streams have "data" and "end" events. First fired whenever data comes in, second
-    is called whenever the stream is at its end. "fs" module has a function createReadStream that
-    can allow a file to be read as a readable stream.*/
+    /* *Readable streams* have "data" and "end" events (not the same as the writable stream 'end' method). 
+    "data" event is fired whenever data comes in, "end" event is called whenever the stream is at its end. 
+    "fs" module has a function 'createReadStream' that can allow a file to be read as a readable stream.*/
     
-        const {createServer} = require("http");
+    // This code creates a server that reads request bodies and streams themback to the client in uppercase text
         createServer((request, response) => {
             response.writeHead(200, {"Content-Type": "text/plain"});
             request.on("data", chunk => response.write(chunk.toString().toUpperCase()));
             request.on("end", () => response.end());
         }).listen(8000);
+
+        request({
+            hostname: "localhost",
+            port: 8000,
+            method: "POST",
+        }, response => {
+            response.on("data", chunk => 
+                process.stdout.write(chunk.toString()));
+        }).end("hello server"); // expect "HELLO SERVER"
+
+    // note that this example writes to process.stdout instead of console.log
+    // console.log adds newlines after each piece of text it writes, which would be messy
+
+// A FILE SERVER
+
+    
