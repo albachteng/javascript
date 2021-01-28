@@ -27,14 +27,32 @@ const halfOdd = num => { // helper function ensures that our halfway point is an
     } else return half;
 }
 
-let primeFactors = [];
-for (let i = 3; // iterating up is actually better, because the larger factors are more likely to not be prime
-    i < halfOdd(testCase); // increment up until we hit halfway point, at which point there are no more possible factors
-    i = i + 2) { // step up by two (no need to test even numbers as they are not prime)
-        if ((testCase % i === 0) && (isPrime(i))) { // divisor and prime
-            console.log(i);
-            primeFactors.push(i);
-        }
+const nextPrime = (prime) => { // try 1111
+    if (prime > 2) {
+        let divisor, squareRoot;
+        do {
+            divisor = 3; // reset i to 3 after we find something divisible
+            prime += 2; // 1113 -> 1115 -> 1117
+            squareRoot = Math.floor(Math.sqrt(prime)); // 33 (when prime is 1111)
+            while (divisor <= squareRoot && prime % divisor) { // keep going until (prime % i === 0) => (false)
+                divisor += 2; // inner while loop continues increasing
+            } // stops when it finds an odd factor of 'prime'
+        } while (divisor <= squareRoot); // if i > squareRoot then we have exhausted possibility of finding factors
+        return prime; // prime has therefore reached the next prime number
     }
+    return value === 2 ? 3 : 2; // if it's 2, the next value is 3; if it's 1, the next prime is 2
+}
+
+console.log(nextPrime(1111)); // 1117
+
+
+// for (let i = 3; // iterating up is actually better, because the larger factors are more likely to not be prime
+//     i < halfOdd(testCase); // increment up until we hit halfway point, at which point there are no more possible factors
+//     i = i + 2) { // step up by two (no need to test even numbers as they are not prime)
+//         if ((testCase % i === 0) && (isPrime(i))) { // divisor and prime
+//             console.log(i);
+//             primeFactors.push(i);
+//         }
+//     }
 
 
