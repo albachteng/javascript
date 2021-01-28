@@ -40,19 +40,20 @@ const nextPrime = (prime) => { // try 1111
         } while (divisor <= squareRoot); // if i > squareRoot then we have exhausted possibility of finding factors
         return prime; // prime has therefore reached the next prime number
     }
-    return value === 2 ? 3 : 2; // if it's 2, the next value is 3; if it's 1, the next prime is 2
+    return prime === 2 ? 3 : 2; // if it's 2, the next value is 3; if it's 1, the next prime is 2
 }
 
 console.log(nextPrime(1111)); // 1117
 
+let primeFactors = [];
+for (let i = 2; // iterating up is actually better, because the larger factors are more likely to not be prime
+    i < Math.floor(Math.sqrt(testCase)); // sqrt(testCase) is the largest possible factor
+    i = nextPrime(i)) { // step up by two (no need to test even numbers as they are not prime)
+        if (testCase % i === 0) { // thanks to nextPrime() we know i is prime so check if it is a factor
+            console.log(i);
+            primeFactors.push(i);
+        }
+    }
 
-// for (let i = 3; // iterating up is actually better, because the larger factors are more likely to not be prime
-//     i < halfOdd(testCase); // increment up until we hit halfway point, at which point there are no more possible factors
-//     i = i + 2) { // step up by two (no need to test even numbers as they are not prime)
-//         if ((testCase % i === 0) && (isPrime(i))) { // divisor and prime
-//             console.log(i);
-//             primeFactors.push(i);
-//         }
-//     }
-
+console.log(primeFactors[primeFactors.length - 1]); // 6857 is the largest prime factor
 
