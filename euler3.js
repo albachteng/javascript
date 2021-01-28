@@ -11,29 +11,30 @@
 // we could try a different approach - simply find all factors and push to an array
 // then we only need to determine if those numbers are prime
 
-const factor = 600851475143;
+const testCase = 600851475143;
 
 const isPrime = num => { // helper function checks for prime
-    for (let i = 2; i < Math.sqrt(num); i++) {
+    for (let i = 2; i * i < num; i++) {
         if (num % i === 0) return false;
     }
     return num > 1;
 }
 
-console.log(isPrime(23)); // expect true;
-console.log(isPrime(27)); // expect false;
-console.log(isPrime(factor)); // false (so we know this isn't a fool's errand);
-console.log(Math.floor(factor / 2)); // an odd number, 300425737571
+const halfOdd = num => { // helper function ensures that our halfway point is an odd number
+    let half = Math.floor(num / 2);
+    if (half % 2 === 0) {
+        return half - 1;
+    } else return half;
+}
 
-for (let i = Math.floor(factor / 2); // start at the halfway point b/c there is no way a number greater than half could be a factor
-    i > 2; // increment down until we hit 3, at which point there are no more possible factors
-    i = i - 2) { // step down by two (no need to test even numbers as they are not prime)
-        if (factor % i === 0) { // i.e. i is a factor of our test case
+let primeFactors = [];
+for (let i = 3; // iterating up is actually better, because the larger factors are more likely to not be prime
+    i < halfOdd(testCase); // increment up until we hit halfway point, at which point there are no more possible factors
+    i = i + 2) { // step up by two (no need to test even numbers as they are not prime)
+        if ((testCase % i === 0) && (isPrime(i))) { // divisor and prime
             console.log(i);
-            if (isPrime(i)) {
-                console.log(`${i} is the greatest prime factor of ${factor}.`);
-                return;
-            }
+            primeFactors.push(i);
         }
     }
+
 
