@@ -34,3 +34,9 @@
 
     // you can think of the express routing as a pattern: 
     //! server.VERB('rout', callback);
+    // where VERB is GET, POST, etc.
+    // route is string that gets appended to domain
+    // callback is the function we want to fire when that request comes in
+
+    // server.use() method is middleware - in this case error-handling one
+
