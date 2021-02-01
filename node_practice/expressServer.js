@@ -40,3 +40,6 @@
 
     // server.use() method is middleware - in this case error-handling one
 
+    // here we only GET or read the data 
+    // in real world systems, you would want to also create, update and delete
+    // Express allows these through the VERB methods POST / PUT / DELETE
