@@ -12,7 +12,7 @@ all of the numbers from 1 to 20? */
 // multiply it by 2 again to make it divisible by 8 (2^3 = 8)
 // multiply it by 3 again to make it divisible by 9 (3^2 = 9)
 // so the solution seems to be to multiply all prime numbers together
-// and then multiply by those prime numbers again once for each power of that prime appears
+// and then multiply by those prime numbers again once for each time a power of that prime appears
 // i.e. 3 ^ 2 appears in 1 - 10 so we need to multiply by 3 twice
 // 2 ^ 3 (8) appears in 1 - 10 so we need to mulitply by 2 thrice
 
@@ -62,7 +62,7 @@ primeFactors.forEach(num => {
 console.log(uniqueFactors);
 
 // 38798760 is the product of all unique factors, but is not divisible by 18, 16 or 9
-// our list of unique factors indicates that 2 has a count of 10, 8 of which are accounted for by 2 4s
+// from our example at the top, we know we need to multiply by 2 at least one more time
 // 3 has a count of 6, which means we need to multiply by 3 one more time
 
 // 232,792,560 is the final answer
