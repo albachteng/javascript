@@ -60,3 +60,9 @@ primeFactors.forEach(num => {
 });
 
 console.log(uniqueFactors);
+
+// 38798760 is the product of all unique factors, but is not divisible by 18, 16 or 9
+// our list of unique factors indicates that 2 has a count of 10, 8 of which are accounted for by 2 4s
+// 3 has a count of 6, which means we need to multiply by 3 one more time
+
+// 232,792,560 is the final answer
