@@ -11,18 +11,39 @@ all of the numbers from 1 to 20? */
 // to resolve the discrepency, I noticed we can multiply by 2 again to make it divisible by 4
 // multiply it by 2 again to make it divisible by 8 (2^3 = 8)
 // multiply it by 3 again to make it divisible by 9 (3^2 = 9)
+// so the solution seems to be to multiply all prime numbers together
+// and then multiply by those prime numbers again once for each power of that prime appears
+// i.e. 3 ^ 2 appears in 1 - 10 so we need to multiply by 3 twice
+// 2 ^ 3 (8) appears in 1 - 10 so we need to mulitply by 2 thrice
 
 // so let's write code to factor a number
 
 const factor = (num) => {
     let factors = []; 
-    for (i = 2; i < num; i+= 1) { // start at 2
+    for (i = 2; i <= num; i++) { // start at 2
         if (num % i === 0) {
-            factors.push(i, num);
+            factors.push(i);
             num /= i;
         }
     }
     return factors;
 }
 
-console.log(factor(20)); 
+console.log(factor(20)); // 2 and 5 are the only unique prime factors
+console.log(factor(99)); // 3 and 11: 3 * 3 * 11;
+
+for (let i = 2; i <= 20; i++) {
+    let primeFactors = []; // ultimately an array of objects
+    let factors = factor(i);
+    factors.forEach(factor => {
+        if (!primeFactors.includes({factor: factor})) { // if we don't have that factor already...
+            primeFactors.push({factor, counter: 1}) // make an array of objects with the factor and a counter initialized to 1
+        } else {
+            // if we already have that factor, instead increment the counter
+            // find the object in primeFactors with factor: factor
+            primeFactors.find(obj => obj.factor === factor).counter++;
+        }
+    });
+    console.log(primeFactors);
+    return primeFactors;
+}
