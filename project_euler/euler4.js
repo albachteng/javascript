@@ -13,4 +13,15 @@ palindrome made from the product of two 3-digit numbers.*/
 // or we'll find ourselves with two numbers, which do need a test
 // we can account for these by simply determining if there are even or odd # of digits
 
-//
+const palTest = (num) => { // helper function for testing if a number is a palindrome
+    let testString = num.toString();
+        for (i = 0; i < testString.length / 2; i++) {
+            // iterate over the string and compare digit at index i to digit at index length - i
+            if (testString[i] !== testString[testString.length - i - 1]) {
+                return false; 
+            }
+        }
+        return true;
+    }
+
+console.log(palTest(1113)); // expect false;
