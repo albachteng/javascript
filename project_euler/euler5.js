@@ -39,11 +39,24 @@ console.log(primeFactors);
 
 // how many times does 2 appear in primeFactors
 
-let counter = 0;
-primeFactors.forEach(num => {
-    if (num === 2) {
-        counter++;
-    }
-})
+const counter = (arr, item) => {
+    // function takes an array and an item and returns the item count;
+    let counter = 0; 
+    arr.forEach(num => {
+        if (num === item) {
+            counter++;
+        }
+    });
+    return counter;
+}
 
-console.log(counter); // 10
+console.log(counter(primeFactors, 2)); // expect 10;
+
+let uniqueFactors = [];
+primeFactors.forEach(num => {
+    if (!uniqueFactors.some(e => e.num === num)) {
+        uniqueFactors.push({num: num, count: counter(primeFactors, num)});
+    }
+});
+
+console.log(uniqueFactors);
