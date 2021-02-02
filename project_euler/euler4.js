@@ -31,35 +31,37 @@ const palTest = (num) => { // helper function for testing if a number is a palin
 console.log(palTest(1113)); // expect false;
 console.log(palTest(101)); // expect true;
 
-// const products = () => {
-//     // let's try going backward, starting at 1000 and going down and stopping as soon as we find a palindrome
-//     for (i = 999; i > 99; i--) { // testing all triple digit numbers
-//         for (j = i - 1; j > 99; j--) { // start each iteration of j at one below i to avoid duplicates
-//             if (palTest(j * i)) { // if product of j and i is a palindrome
-//                 return (j * i);
-//             }
-//         }
-// }}
-
-
-// console.log(products()); // runtime error
-
-// 998899 / 11 = 90809
-
-const factor = (num) => {
-    const factors = [];
-    if (num < 100) {
-        return factors;
-    } else { // if we've factored the number to less than 100, we have found all factors greater than 100 and can stop
-    for (i = 100; i < num / 2; i++) { // search for factors greater than 99 but less than half (largest possible factor)
-        if (num % i === 0) {
-            let greater = i > (num / i) ? i : num / i;
-            factors.push(greater); // push the greater of the two factors
-            return factor(greater); // return a call to factor the greater of two
+const generatePal = () => {
+    let palindromes = [];
+    for (let i = 999 * 999; i > 100 * 100; i--) {
+        if (palTest(i)) { // if it's a palindrome, push it to the list
+            palindromes.push(i);
         }
     }
-    return factors;
-}}
+    return palindromes;
+}
 
-// console.log(factor(989988));
-console.log(factor(963936));
+console.log(generatePal().length); // generates a list of 1798 palindromes within our bounds
+
+let arr = generatePal().filter(num => { // filter out numbers not evenly divisible by a 3-digit number
+    for (let i = 100; i < 999; i++) {
+        if (num % i === 0) {
+            return true; // if it can be divided evenly by any 3-digit number, stop
+        }
+    } // we got through all the 3-digit numbers and it couldn't be divided by any of them
+    return false;
+}); // narrows it down to about 1000 items that a) are palindromes and b) can be divided by at least one 3-digit number
+// it is also ordered - the highest number will be first
+
+console.log(arr.length); // 1072 palindromes divisible by at least one 3-digit number
+
+for (let i = 0; i < arr.length; i++) {
+    for (let j = 999; j > 99; j--) {
+        if (arr[i] % j === 0 
+            && arr[i] / j > 99 
+            && arr[i] / j < 1000) {
+                console.log(arr[i]);
+                return arr[i];
+            }
+    }
+} // the greatest palindrome that is a factor of two three digit numbers is 906609 = 913 * 993 
