@@ -29,21 +29,21 @@ const factor = (num) => {
     return factors;
 }
 
-console.log(factor(20)); // 2 and 5 are the only unique prime factors
-console.log(factor(99)); // 3 and 11: 3 * 3 * 11;
-
+let primeFactors = [];
 for (let i = 2; i <= 20; i++) {
-    let primeFactors = []; // ultimately an array of objects
     let factors = factor(i);
-    factors.forEach(factor => {
-        if (!primeFactors.includes({factor: factor})) { // if we don't have that factor already...
-            primeFactors.push({factor, counter: 1}) // make an array of objects with the factor and a counter initialized to 1
-        } else {
-            // if we already have that factor, instead increment the counter
-            // find the object in primeFactors with factor: factor
-            primeFactors.find(obj => obj.factor === factor).counter++;
-        }
-    });
-    console.log(primeFactors);
-    return primeFactors;
+    // push each factor from the factors array to primeFactors
+    primeFactors.push(...factors);
 }
+console.log(primeFactors);
+
+// how many times does 2 appear in primeFactors
+
+let counter = 0;
+primeFactors.forEach(num => {
+    if (num === 2) {
+        counter++;
+    }
+})
+
+console.log(counter); // 10
