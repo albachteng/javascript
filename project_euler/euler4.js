@@ -2,7 +2,7 @@
 made from the product of two 2-digit numbers is 9009 = 91 × 99. Find the largest 
 palindrome made from the product of two 3-digit numbers.*/ 
 
-// need to be able to test if a given number is a palindrome
+//// need to be able to test if a given number is a palindrome
 // then we can simply iterate over the possible pairs of 3-digit numbers
 // brute-force would have us test every possible 3 digit number against 100
 // and then iterate to 101 and test every possible 3 digit number against that
@@ -25,3 +25,17 @@ const palTest = (num) => { // helper function for testing if a number is a palin
     }
 
 console.log(palTest(1113)); // expect false;
+
+const products = () => {
+    const palindromes = [];
+    for (i = 100; i < 1000; i++) {
+        for (j = i + 1; j < 1000; j++) {
+            if (palTest(j * i)) { // if product of j and i is a palindrome
+                palindromes.push(j * i); 
+            }
+        }
+    }
+    return palindromes;
+}
+
+console.log(products()); // runtime error
