@@ -25,13 +25,14 @@ const palTest = (num) => { // helper function for testing if a number is a palin
     }
 
 console.log(palTest(1113)); // expect false;
+console.log(palTest(101)); // expect true;
 
 const products = () => {
     const palindromes = [];
-    for (i = 100; i < 1000; i++) {
-        for (j = i + 1; j < 1000; j++) {
+    for (i = 100; i < 1000; i++) { // testing all triple digit numbers
+        for (j = i + 1; j < 1000; j++) { // start each iteration of j at one above i to avoid duplicates
             if (palTest(j * i)) { // if product of j and i is a palindrome
-                palindromes.push(j * i); 
+                palindromes.push(j * i); // store palindromes
             }
         }
     }
