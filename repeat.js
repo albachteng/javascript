@@ -4,18 +4,18 @@ const repeat = (num, func) => {
     }
 }
 
-repeat(3, console.log);
+repeat(3, console.log); // 1 2 3
 
 let labels = [];
 repeat(3, i => labels.push(`Unit ${i + 1}`));
-console.log(...labels);
+console.log(...labels); // "Unit 1 Unit 2 Unit 3 
 
 function greaterThan(n) {
     return m => m > n; // need to return a function that takes a variable that is not n
 }
 
 let greaterThan10 = greaterThan(10);
-console.log(greaterThan10(11));
+console.log(greaterThan10(11)); // true
 
 function noisy(func) {
     return (...args) => {
