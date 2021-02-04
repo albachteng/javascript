@@ -13,6 +13,35 @@ This problem is the same as the previous problem (HTTP COLLECT) in that
 */ 
 
 const http = require('http'),
-      url1 = process.argv[2];
-      url2 = process.argv[3];
+      bl = require('bl'); 
+      url1 = process.argv[2],
+      url2 = process.argv[3],
       url3 = process.argv[4]; 
+
+http.get(url1, (response) => {
+  response.pipe(bl((err, data) => {
+      if (err) { 
+          return console.log(err); 
+      }
+      data = data.toString();
+      console.log(data);
+      http.get(url2, (response) => {
+        response.pipe(bl((err, data1) => {
+          if (err) {
+            return console.log(err);
+          }
+          data1 = data1.toString();
+          console.log(data1); 
+          http.get(url3, (response) => {
+            response.pipe(bl((err, data2) => {
+              if (err) {
+                console.log(err); 
+              }
+              data2 = data2.toString();
+              console.log(data2);
+            }))
+          })
+        }))
+      })
+  }));
+});
