@@ -38,11 +38,10 @@
   does learnyounode, or the verifier, and just work.  
   */ 
 
-const fs = require('fs'); 
+const fs = require('fs'); // we asisgn the fs and path modules where we declare our function
 const path = require('path'); 
 
-
-module.exports = function (directory, extension, callback) {
+module.exports = function (directory, extension, callback) { // assign function to module.exports
     fs.readdir(directory, (err, list) => {
         if (err) 
         return callback(err);
