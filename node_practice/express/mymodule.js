@@ -40,9 +40,18 @@
 
 const fs = require('fs'); 
 const path = require('path'); 
-const directory = process.argv[2];
-const extension = process.argv[3];
 
-module.exports = function (name, ext, callback) {
-    
+
+module.exports = function (directory, extension, callback) {
+    fs.readdir(directory, (err, list) => {
+        if (err) 
+        return callback(err);
+
+    list = list.filter((file) => {
+        return path.extname(file) === `.${extension}`;
+    });
+
+    callback(null, list);
+    });
 }
+

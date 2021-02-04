@@ -19,7 +19,7 @@ const path = require('path');
 const directory = process.argv[2];
 const extension = process.argv[3];
 
-fs.readdir(directory, (err, list) => {
+fs.readdir(directory, (err, list) => { // pathname as first argument, callback as second
     if (err) {
         console.log(`Error: ${err}`);
     } else {
