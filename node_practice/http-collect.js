@@ -11,23 +11,35 @@
 
 const http = require('http'),
     url = process.argv[2];
+    bl = require('bl'); // buffer list api 
 
 // two methods to complete this, I will try both - first is using response.end()
 // and is very similar to the last program, except it waits to print to the console
 
+// http.get(url, (response) => {
+//     let data = '';
+//     let counter = 0;
+//     response.setEncoding('utf8');
+//     response.on('data', (chunk) => {
+//         data += chunk;
+//         counter += chunk.length;
+//     });
+//     response.on('error', (err) => {
+//         console.log(`Error: ${err}`);
+//     });
+//     response.on('end', () => {
+//         console.log(counter);
+//         console.log(data);
+//     });
+// });
+
 http.get(url, (response) => {
-    let data = '';
-    let counter = 0;
-    response.setEncoding('utf8');
-    response.on('data', (chunk) => {
-        data += chunk;
-        counter += chunk.length;
-    });
-    response.on('error', (err) => {
-        console.log(`Error: ${err}`);
-    });
-    response.on('end', () => {
-        console.log(counter);
+    response.pipe(bl((err, data) => {
+        if (err) { // bl simply pipes the data into the response
+            return console.log(err); 
+        }
+        data = data.toString();
+        console.log(data.length);
         console.log(data);
-    });
+    }));
 });
