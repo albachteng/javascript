@@ -45,11 +45,14 @@ module.exports = function (directory, extension, callback) { // assign function 
     fs.readdir(directory, (err, list) => {
         if (err) 
         return callback(err);
-
+// exported function will take a directory, an extension and a callback;
+// it will run the callback with an err argument if there is an err passed to readdir's callback
+// otherwise it will store readdir in list;
+// below we filter that list by the given extension type
     list = list.filter((file) => {
         return path.extname(file) === `.${extension}`;
     });
-
+// and pass the filtered list to the callback with null as its first parameter (err handler)
     callback(null, list);
     });
 }
