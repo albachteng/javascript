@@ -10,12 +10,10 @@ http.get(url, (response) => { // since it has methods for handling errors, we do
     // response object is a Node Stream object, treat as object that emits events
     response.setEncoding('utf8'); // set data events to emit Strings rather than Buffer objects
     response.on('data', (chunk) => {
-        console.log(chunk);
+        console.log(chunk); // we could have it add to a string here and only print on 'end' event
+        // but the specifications ask for us to log the individual chunks 
     });
     response.on('error', (err) => {
         console.log(err);
     });
-    response.on('end', () => {
-
-    };
 })
