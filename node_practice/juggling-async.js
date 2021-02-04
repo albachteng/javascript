@@ -12,36 +12,65 @@ This problem is the same as the previous problem (HTTP COLLECT) in that
 
 */ 
 
-const http = require('http'),
-      bl = require('bl'); 
-      url1 = process.argv[2],
-      url2 = process.argv[3],
-      url3 = process.argv[4]; 
+// my first solution below is simple but inelegant and repeats a lot of code
 
-http.get(url1, (response) => {
-  response.pipe(bl((err, data) => {
-      if (err) { 
-          return console.log(err); 
+const http = require('http'),
+      bl = require('bl'),
+      // url1 = process.argv[2],
+      // url2 = process.argv[3],
+      // url3 = process.argv[4]; 
+      results = [];
+  let count = 0;
+
+// http.get(url1, (response) => {
+//   response.pipe(bl((err, data) => {
+//       if (err) { 
+//           return console.log(err); 
+//       }
+//       data = data.toString();
+//       console.log(data);
+//       http.get(url2, (response) => {
+//         response.pipe(bl((err, data1) => {
+//           if (err) {
+//             return console.log(err);
+//           }
+//           data1 = data1.toString();
+//           console.log(data1); 
+//           http.get(url3, (response) => {
+//             response.pipe(bl((err, data2) => {
+//               if (err) {
+//                 console.log(err); 
+//               }
+//               data2 = data2.toString();
+//               console.log(data2);
+//             }));
+//           });
+//         }));
+//       });
+//   }));
+// });
+
+// the official solution made use of a counter so let's try that
+
+function httpGet (index) {
+  http.get(process.argv[2 + index], (response) => {
+    response.pipe(bl((err, data) => {
+      if (err) {
+        return console.log(`Error: ${err}`);
       }
-      data = data.toString();
-      console.log(data);
-      http.get(url2, (response) => {
-        response.pipe(bl((err, data1) => {
-          if (err) {
-            return console.log(err);
-          }
-          data1 = data1.toString();
-          console.log(data1); 
-          http.get(url3, (response) => {
-            response.pipe(bl((err, data2) => {
-              if (err) {
-                console.log(err); 
-              }
-              data2 = data2.toString();
-              console.log(data2);
-            }))
-          })
-        }))
-      })
-  }));
-});
+
+      results[index] = data.toString(); 
+      count++;
+
+      if (count === 3) {
+        for (let i = 0; i < 3; i++) {
+          console.log(results[i]);
+        }
+      }
+    }));
+  });
+}
+
+for (let i = 0; i < 3; i++) {
+  httpGet(i);
+}
