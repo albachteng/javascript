@@ -28,19 +28,30 @@ greatest product. What is the value of this product? */
 // the greatest possible product would be thirteen adjacent 9s
 // short of that, the greatest adjacent 13 digits will sum to the greatest value
 // i.e. 1234567899999 is going to yield a greater product than 9876543211111
-// this remains true even though the latter is a higher number when read out
+// this remains true even though the latter is a higher number when read out left to right
 // so a decent brute force approach would be to compare each "window" of 13 digits
-// sum them, and store an array of those digits that sum to the greatest value found
-// then return product of those digits
-// we might be able to optimize by skipping over any 13-digit window that has a zero in it
+// sum them using reduce, and store an array of those digits that sum to the greatest value found
+// then return the product of those digits
+// we might be able to slightly optimize by skipping over any 13-digit window that has a zero in it
 // since in that case the product would just be zero 
 
 const numberString = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
 console.log(numberString.length) // expect 1000;
 
-const window = (string) => { // function for comparing 13-digit windows within a string
-    let largestArray = [], largestValue = 0;
-    for (let i = 0; i < string.legth; i++) {
-        // if () {}
-    }
+const findLargestProduct = (string) => { // function for comparing 13-digit windows within a string
+    let largestWindow = '0', currentWindow;
+    for (let i = 0; i < string.length - 12; i++) {
+        currentWindow = string.slice(i, i + 13); // going down the string in 13-digit windows
+            console.log(currentWindow);
+        largestWindow = compare(currentWindow, largestWindow); // set largest window to the greater of the two
+    } // having gone through every window, the largestWindow should yield the largest product
+    return [...largestWindow].reduce((a, b) => a * b); 
 }
+
+const compare = (string1, string2) => { // returns the string of numbers with the higher sum
+    return [...string1].reduce((a, b) => a * b) > [...string2].reduce((a, b) => a * b) ? string1 : string2;
+}
+
+console.log(compare('898', '456')); // expect '898';
+
+console.log(findLargestProduct(numberString)); // final answer: 23514624000
