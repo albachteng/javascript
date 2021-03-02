@@ -98,11 +98,11 @@ class LinkedList {
     let middlePointer = this.head;
 
     while (fastPointer) {
-      if (fastPointer.next == null || fastPointer.next.next == null) {
-        break;
+      fastPointer = fastPointer.getNextNode();
+      if (fastPointer !== null) {
+        fastPointer = fastPointer.getNextNode();
+        middlePointer = middlePointer.getNextNode();  
       }
-      fastPointer = fastPointer.getNextNode().getNextNode();
-      middlePointer = middlePointer.getNextNode();
     }
     return middlePointer;
   }
