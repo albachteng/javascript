@@ -58,6 +58,20 @@ class LinkedList {
     return removedHead.data;
   }
 
+  removeTail() {
+    let currentNode = this.head.next;
+    let previousNode = this.head;
+    if (!previousNode) { // no head, therefore no tail
+      return;
+    }
+    while (currentNode.next) {
+      currentNode = currentNode.next;
+      previousNode = previousNode.next;
+    }
+    previousNode.next = null;
+    return currentNode.data;
+  }
+
   printList() {
     let currentNode = this.head;
     let output = '<head> ';
@@ -69,3 +83,4 @@ class LinkedList {
     console.log(output);
   }
 }
+
