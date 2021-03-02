@@ -83,15 +83,28 @@ class LinkedList {
     while (tailPointer) {
       tailPointer = tailPointer.getNextNode(); 
       if (count >= n) {
-        if (nthLastNodePointer) {
-          nthLastNodePointer = nthLastNodePointer.getNextNode();
-        } else {
+        if (!nthLastNodePointer) {
           nthLastNodePointer = this.head;
         }
+        nthLastNodePointer = nthLastNodePointer.getNextNode(); 
       }
       count++;
     }
     return nthLastNodePointer;
+  }
+
+  findMiddle() {
+    let fastPointer = this.head;
+    let middlePointer = this.head;
+
+    while (fastPointer) {
+      if (fastPointer.next == null || fastPointer.next.next == null) {
+        break;
+      }
+      fastPointer = fastPointer.getNextNode().getNextNode();
+      middlePointer = middlePointer.getNextNode();
+    }
+    return middlePointer;
   }
 
   printList() {
@@ -107,12 +120,9 @@ class LinkedList {
 }
 
 let numbers = new LinkedList;
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 100; i++) {
   numbers.addToTail(i);
 }
 numbers.printList(); 
-numbers.removeTail();
-numbers.removeTail();
-numbers.removeTail();
-numbers.removeTail();
-numbers.printList();
+
+console.log(numbers.findMiddle()); // expect 49;
