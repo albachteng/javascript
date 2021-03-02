@@ -75,6 +75,25 @@ class LinkedList {
     return currentNode.data;
   }
 
+  nthLastNode(n) {
+    let nthLastNodePointer = null;
+    let tailPointer = this.head;
+    let count = 0;
+
+    while (tailPointer) {
+      tailPointer = tailPointer.getNextNode(); 
+      if (count >= n) {
+        if (nthLastNodePointer) {
+          nthLastNodePointer = nthLastNodePointer.getNextNode();
+        } else {
+          nthLastNodePointer = this.head;
+        }
+      }
+      count++;
+    }
+    return nthLastNodePointer;
+  }
+
   printList() {
     let currentNode = this.head;
     let output = '<head> ';
