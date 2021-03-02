@@ -16,3 +16,18 @@ class Node {
         return this.next;
     }
 }
+
+const youngest = new Node('young');
+const middle = new Node('middle'); 
+const oldest = new Node('oldest');
+
+youngest.setNextNode(middle);
+middle.setNextNode(oldest);
+
+let current = youngest;
+let oldestName = '';
+
+while (current !== null) {
+    oldestName = current.data;
+    
+}
