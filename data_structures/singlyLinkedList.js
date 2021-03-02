@@ -59,16 +59,19 @@ class LinkedList {
   }
 
   removeTail() {
-    let currentNode = this.head.next;
     let previousNode = this.head;
     if (!previousNode) { // no head, therefore no tail
-      return;
+      return null; 
     }
-    while (currentNode.next) {
-      currentNode = currentNode.next;
-      previousNode = previousNode.next;
+    let currentNode = this.head.next;
+    if (!currentNode) { // i.e. if list is only a head
+      return this.removeHead();
     }
-    previousNode.next = null;
+    while (currentNode.getNextNode()) {
+      currentNode = currentNode.getNextNode();
+      previousNode = previousNode.getNextNode();
+    }
+    previousNode.next = null; // orphan the tail
     return currentNode.data;
   }
 
@@ -84,3 +87,13 @@ class LinkedList {
   }
 }
 
+let numbers = new LinkedList;
+for (let i = 0; i < 3; i++) {
+  numbers.addToTail(i);
+}
+numbers.printList(); 
+numbers.removeTail();
+numbers.removeTail();
+numbers.removeTail();
+numbers.removeTail();
+numbers.printList();
