@@ -113,3 +113,20 @@ class Stack {
     }
 }
 
+const pieStack = new Stack;
+
+const pies = ['apple', 'blueberry', 'pumpkin', 'banana cream', 'pecan'];
+for (pie in pies) {
+    pieStack.push(pies[pie]);
+}
+
+console.log(pieStack.peek()); 
+console.log(pieStack.pop()); 
+pieStack.push('strawberry rhubarb'); 
+console.log(pieStack.peek()); 
+pieStack.pop();
+pieStack.pop(); 
+pieStack.pop(); 
+console.log(pieStack.pop());
+pieStack.pop();
+pieStack.pop(); // expect error: stack is empty;
