@@ -88,7 +88,6 @@ class Queue {
     enqueue(data) {
       if (!this.hasRoom()) {
         throw new Error('Queue is full!');
-        return;
       }
       this.queue.addToTail(data);
       this.size++;
@@ -107,3 +106,15 @@ class Queue {
     }
   }
   
+  const queue = new Queue;
+  console.log(queue.isEmpty()); // expect true;
+
+  const line = ['bob', 'harry', 'sally', 'george'];
+  for (person in line) {
+    queue.enqueue(line[person]);
+  }
+
+  console.log(queue.hasRoom()); // expect true;
+  console.log(queue.dequeue()); // expect 'bob';
+  console.log(queue.enqueue('sam'));
+  queue.queue.printList(); // expect '<head> harry sally george sam <tail>';
