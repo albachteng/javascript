@@ -48,4 +48,15 @@ class HashTableTwo {
             this.bucket[i] = null; 
         } // initialize all buckets for the given number of slots to null
     }
+    getSize() {
+        return this.size;
+    }
+    isEmpty() {
+        return this.getSize() == 0;
+    }
+    getIndex(key) {
+        let index = key % this.slots;
+        return index;
+    }
 }
+
