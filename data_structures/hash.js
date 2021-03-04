@@ -79,7 +79,9 @@ class HashTableTwo {
     delete(key) {
         const hash = this.getIndex(key); 
         if (this.bucket[hash] && this.bucket[hash].hasOwnProperty(key)) {
-            this.bucket[hash] = null;
+            delete this.bucket[hash][key];
+        } else {
+            return null;
         }
     }
 }
