@@ -135,3 +135,13 @@ console.log(peopleHash.search('gustavo')); // 19 (his age)
 peopleHash.delete('constance'); 
 console.log(peopleHash.search('constance')); // null
 console.log(peopleHash);
+const morePeople = [{name: 'fritz', age: 9},
+                    {name: 'clara', age: 12},
+                    {name: 'bobby', age: 27},
+                    {name: 'amanda', age: 29},
+                    {name: 'andrew', age: 31},
+                    {name: 'graham', age: 30}];
+for (person of morePeople) {
+    peopleHash.add(person.name, person.age);
+}
+console.log(peopleHash);
