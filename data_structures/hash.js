@@ -28,7 +28,7 @@ class HashTable {
         } else {
             return null;
         }
-    }
+    }d
 }
 
 class HashEntry {
@@ -58,5 +58,28 @@ class HashTableTwo {
         let index = key % this.slots;
         return index;
     }
+    add(key, value) {
+        const hash = this.getIndex(key);
+        if (!this.bucket[hash]) {
+            this.bucket[hash] = {};
+        }
+        if (!this. buckets[hash].hasOwnProperty(key)) {
+            this.size++;
+        }
+        this.bucket[hash][key] = value;
+    }
+    search(key) {
+        const hash = this.getIndex(key);
+        if (this.bucket[hash] && this.bucket[hash].hasOwnProperty(key)) {
+            return this.bucket[hash][key];
+        } else {
+            return null;
+        }
+    }
+    delete(key) {
+        const hash = this.getIndex(key); 
+        if (this.bucket[hash] && this.bucket[hash].hasOwnProperty(key)) {
+            this.bucket[hash] = null;
+        }
+    }
 }
-
