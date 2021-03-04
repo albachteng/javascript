@@ -55,8 +55,11 @@ class HashTableTwo {
         return this.getSize() == 0;
     }
     getIndex(key) {
-        let index = key.toString().length % this.slots;
-        return index;
+        let index = 0;
+        for (let i = 0; i < key.length; i++) {
+            index += index + key.charCodeAt(i);
+        }
+        return index % this.slots;
     }
     double() {
         // doubles slots when size reaches 60% of slots 
@@ -68,6 +71,7 @@ class HashTableTwo {
             newBucket[i] = null; 
         } // create a newBucket of the appropriate size
         this.bucket = newBucket;
+        this.size = 0; // reset size to zero or else the copying below will throw off the count
         oldBucket.forEach(index => {
             if (index) {
                 Object.keys(index).forEach(key => {
