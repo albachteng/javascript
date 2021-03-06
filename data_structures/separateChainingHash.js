@@ -21,7 +21,31 @@ class LinkedList {
     }
 
     addToHead(entry) {
-
+        if (!(entry instanceof HashEntry)) {
+            throw new Error('Entry must be of type HashEntry');
+        }
+        const currentHead = this.head;
+        this.head = entry;
+        if (currentHead) {
+            this.head.setNextEntry(currentHead);
+        }
+    }
+    removeHead() {
+        const removedHead = this.head;
+        if (!removedHead) {
+            return null;
+        }
+        this.head = removedHead.getNextEntry();
+        return [removedHead.key, removedHead.value];
+    }
+    printList() {
+        let currentEntry = this.head;
+        let output = "<head> ";
+        while (currentEntry != null) {
+            output += "[" + currentEntry.key + ': ' + currentEntry.value + '] ';
+            currentEntry = currentEntry.getNextEntry();
+        }
+        return output + "<tail>";
     }
 }
 
