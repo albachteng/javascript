@@ -57,6 +57,16 @@ class LinkedList {
             }
         } return false;
     }
+    getEntryByKey(key) {
+        let currentEntry = this.head;
+        while (currentEntry) {
+            if (currentEntry.key === key) {
+                return currentEntry;
+            } else {
+                currentEntry = currentEntry.getNextEntry();
+            }
+        } return null;
+    }
 }
 
 class HashTable {
@@ -83,7 +93,7 @@ class HashTable {
 
     search(key) {
         const hash = this.hash(key);
-        if (this.table.hasOwnProperty(hash) && this.table[hash].hasOwnProperty(key)) {
+        if (this.table.hasOwnProperty(hash) && this.table[hash].includes(key)) {
             return this.table[hash][key];
 // remember that we have to check to make sure the hash AND the key exist, since a hash could contain a number of key-value pairs
         } else {
