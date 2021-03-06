@@ -110,10 +110,17 @@ class HashTable {
         this.table = {};
         this.maxSize *= 2;
         this.size = 0;
-        for (keys in Object.keys(previousTable)) {
-
+        Object.keys(previousTable).forEach(key => {
+            let currentEntry = previousTable[key].head;
+            do {
+                let entryToAdd = currentEntry;
+                entryToAdd.next = null;
+                this.add(entryToAdd);
+                currentEntry = currentEntry.getNextEntry();
+            }
+            while (currentEntry);
+            });
         }
-    }
 }
 
 const entries = [
@@ -135,7 +142,7 @@ let myHashTable = new HashTable();
 for (let i = 0; i < entries.length; i++) {
     myHashTable.add(entries[i]);
 }
-console.log(myHashTable.table);
 
-console.log(myHashTable.search('zeta'));
-console.log(myHashTable.size);
+console.log(myHashTable.table);
+myHashTable.double();
+console.log(myHashTable.table);
