@@ -1,29 +1,56 @@
+class HashEntry { // 
+    constructor(key, value) {
+        this.key = key; 
+        this.value = value;
+        this.next = null;
+    }
+    setNextEntry(entry) {
+        if (!(entry instanceof HashEntry)) {
+            throw new Error('Next must be of type HashEntry');
+        }
+        this.next = entry;
+    }
+    getNextEntry() {
+        return this.next;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        this.head = null;
+    }
+
+    addToHead(entry) {
+
+    }
+}
+
 class HashTable {
     constructor() {
-        this.values = {}; 
-        this.length = 0;
+        this.table = {}; 
+        this.maxSize = 0;
         this.size = 0; 
     }
 
-    calculateHash(key) { // simple arithmetic modular hash function
+    hash(key) { // simple arithmetic modular hash function
         return key.toString().length % this.size;
     }
 
-    add(key, value) {
-        const hash = this.calculateHash(key); 
-        if (!this.values.hasOwnProperty(hash)) { // if values doesn't already have that hash
-            this.values[hash] = {}; // add the hash as a key to values and initialize to empty object
+    add(entry) {
+        const hash = this.hash(entry.key); 
+        if (!this.table.hasOwnProperty(hash)) { // if table doesn't already have that hash
+            this.table[hash] = new LinkedList(); // add the hash as a key to table and initialize to empty object
         }
-        if (!this.values[hash].hasOwnProperty(key)) {
-            this.length++; // if the provided key doesn't already exist at that hash
+        if (!this.table[hash].hasOwnProperty(entry.key)) {
+            this.size++; // if the provided key doesn't already exist at that hash
         } // we can increment the length to add it
-        this.values[hash][key] = value; // finally we add the key value pair into the hash object
+        this.table[hash][entry.key] = entry.value; // finally we add the key value pair into the hash object
     }
 
     search(key) {
-        const hash = this.calculateHash(key);
-        if (this.values.hasOwnProperty(hash) && this.values[hash].hasOwnProperty(key)) {
-            return this.values[hash][key];
+        const hash = this.hash(key);
+        if (this.table.hasOwnProperty(hash) && this.table[hash].hasOwnProperty(key)) {
+            return this.table[hash][key];
 // remember that we have to check to make sure the hash AND the key exist, since a hash could contain a number of key-value pairs
         } else {
             return null;

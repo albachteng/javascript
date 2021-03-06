@@ -1,5 +1,5 @@
 //@ts-ignore
-class ListNode {
+export class ListNode {
     constructor(data) {
       this.data = data;
       this.next = null;
@@ -22,7 +22,7 @@ class ListNode {
   }
   
 //@ts-ignore
-class LinkedList {
+export class LinkedList {
   constructor() {
     this.head = null;
   }
