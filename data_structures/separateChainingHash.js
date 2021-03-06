@@ -47,6 +47,16 @@ class LinkedList {
         }
         return output + "<tail>";
     }
+    includes(key) {
+        let currentEntry = this.head;
+        while (currentEntry) {
+            if (currentEntry.key === key) {
+                return true;
+            } else {
+                currentEntry = currentEntry.getNextEntry();
+            }
+        } return false;
+    }
 }
 
 class HashTable {
@@ -63,12 +73,12 @@ class HashTable {
     add(entry) {
         const hash = this.hash(entry.key); 
         if (!this.table.hasOwnProperty(hash)) { // if table doesn't already have that hash
-            this.table[hash] = new LinkedList(); // add the hash as a key to table and initialize to empty object
+            this.table[hash] = new LinkedList(); // add the hash as a key to table and initialize to empty LinkedList
         }
-        if (!this.table[hash].hasOwnProperty(entry.key)) {
+        if (!this.table[hash].includes(entry.key)) {
             this.size++; // if the provided key doesn't already exist at that hash
-        } // we can increment the length to add it
-        this.table[hash][entry.key] = entry.value; // finally we add the key value pair into the hash object
+        } // we can increment the size to add it
+        this.table[hash].addToHead(entry); // finally we add the key value pair into the linkedList
     }
 
     search(key) {
