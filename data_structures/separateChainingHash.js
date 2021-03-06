@@ -76,8 +76,12 @@ class HashTable {
         this.size = 0; 
     }
 
-    hash(key) { // simple arithmetic modular hash function
-        return key.toString().length % this.maxSize;
+    hash(key) { 
+        let output = 0;
+        for (let i = 0; i < key.toString().length; i++) {
+            output += key.charCodeAt(i);
+        }
+        return output % this.maxSize;
     }
 
     add(entry) {
@@ -98,6 +102,16 @@ class HashTable {
 // remember that we have to check to make sure the hash AND the key exist, since a hash could contain a number of key-value pairs
         } else {
             return null;
+        }
+    }
+
+    double() {
+        const previousTable = this.table;
+        this.table = {};
+        this.maxSize *= 2;
+        this.size = 0;
+        for (keys in Object.keys(previousTable)) {
+
         }
     }
 }
@@ -124,3 +138,4 @@ for (let i = 0; i < entries.length; i++) {
 console.log(myHashTable.table);
 
 console.log(myHashTable.search('zeta'));
+console.log(myHashTable.size);
