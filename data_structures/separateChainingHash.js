@@ -97,12 +97,12 @@ class HashTable {
         for (let i = 0; i < key.toString().length; i++) {
             output += key.charCodeAt(i);
         }
-        return output % this.maxSize;
+        return output % this.maxSize; // which will be a prime number because of our resizing function
     }
 
     add(entry) {
         if (.6 * this.maxSize <= this.size + 1) {
-            this.resize();
+            this.resize(); // if adding to the list would make it more than 60% full, resize the list now to avoid hash problems
         }
         const hash = this.hash(entry.key); 
         if (!this.table.hasOwnProperty(hash)) { // if table doesn't already have that hash
@@ -118,7 +118,7 @@ class HashTable {
         const hash = this.hash(key);
         if (this.table.hasOwnProperty(hash) && this.table[hash].includes(key)) {
             return this.table[hash].getEntryByKey(key);
-// remember that we have to check to make sure the hash AND the key exist, since a hash could contain a number of key-value pairs
+// remember that we have to check to make sure the hash AND the key exist, since a hash could contain a number of entries
         } else {
             return null;
         }
@@ -140,6 +140,12 @@ class HashTable {
             while (currentEntry);
             });
         }
+    
+    printTable() {
+        Object.keys(this.table).forEach(key => {
+            console.log(key, this.table[key].printList()); 
+        });
+    }
 }
 
 const entries = [
@@ -162,5 +168,4 @@ for (let i = 0; i < entries.length; i++) {
     myHashTable.add(entries[i]);
 }
 
-console.log(myHashTable.table);
-console.log(myHashTable.search('epsilon'));
+myHashTable.printTable();
