@@ -1,8 +1,8 @@
 
 
 class HashTable {
-    constructor() {
-        this.slots = 10;
+    constructor(slots = 10) {
+        this.slots = slots;
         this.size = 0;
         this.bucket = [];
         for (let i = 0; i < this.slots; i++) {

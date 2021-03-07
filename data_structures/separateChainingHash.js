@@ -70,10 +70,26 @@ class LinkedList {
 }
 
 class HashTable {
-    constructor() {
+    constructor(maxSize = 11) {
         this.table = {}; 
-        this.maxSize = 10;
+        this.maxSize = maxSize;
         this.size = 0; 
+    }
+
+    nextPrime(prime) { 
+        if (prime > 2) {
+            let divisor, squareRoot;
+            do {
+                divisor = 3; 
+                prime += 2; 
+                squareRoot = Math.floor(Math.sqrt(prime)); 
+                while (divisor <= squareRoot && prime % divisor) { 
+                    divisor += 2; 
+                } 
+            } while (divisor <= squareRoot);
+            return prime; 
+        }
+        return prime === 2 ? 3 : 2; 
     }
 
     hash(key) { 
@@ -85,6 +101,9 @@ class HashTable {
     }
 
     add(entry) {
+        if (.6 * this.maxSize <= this.size + 1) {
+            this.resize();
+        }
         const hash = this.hash(entry.key); 
         if (!this.table.hasOwnProperty(hash)) { // if table doesn't already have that hash
             this.table[hash] = new LinkedList(); // add the hash as a key to table and initialize to empty LinkedList
@@ -105,10 +124,10 @@ class HashTable {
         }
     }
 
-    double() {
+    resize() {
         const previousTable = this.table;
         this.table = {};
-        this.maxSize *= 2;
+        this.maxSize = this.nextPrime(this.maxSize);
         this.size = 0;
         Object.keys(previousTable).forEach(key => {
             let currentEntry = previousTable[key].head;
@@ -144,5 +163,4 @@ for (let i = 0; i < entries.length; i++) {
 }
 
 console.log(myHashTable.table);
-myHashTable.double();
-console.log(myHashTable.table);
+console.log(myHashTable.search('epsilon'));
