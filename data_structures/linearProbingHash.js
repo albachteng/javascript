@@ -38,7 +38,7 @@ class HashTable {
                 Object.keys(index).forEach(key => {
                     this.add(key, index[key]);
                 })
-        }})
+        }});
     }
     add(key, value) {
         if (this.size >= .6 * this.slots) {

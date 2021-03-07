@@ -92,7 +92,7 @@ class HashTable {
         if (!this.table[hash].includes(entry.key)) {
             this.size++; // if the provided key doesn't already exist at that hash
         } // we can increment the size to add it
-        this.table[hash].addToHead(entry); // finally we add the key value pair into the linkedList
+        this.table[hash].addToHead(entry); // finally we add the entry into the linkedList
     }
 
     search(key) {
@@ -113,10 +113,10 @@ class HashTable {
         Object.keys(previousTable).forEach(key => {
             let currentEntry = previousTable[key].head;
             do {
-                let entryToAdd = currentEntry;
-                entryToAdd.next = null;
-                this.add(entryToAdd);
-                currentEntry = currentEntry.getNextEntry();
+                let nextEntry = currentEntry.getNextEntry();
+                currentEntry.next = null;
+                this.add(currentEntry);
+                currentEntry = nextEntry;
             }
             while (currentEntry);
             });
