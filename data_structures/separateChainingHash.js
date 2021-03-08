@@ -102,21 +102,29 @@ class HashTable {
         for (let i = 0; i < name.length; i++) {
             output += name.charCodeAt(i);
         }
-        return output % this.maxSize; // which will be a prime number because of our resizing function
+        return output % this.maxSize;
     }
 
     add(entry) {
-        if (.6 * this.maxSize <= this.size + 1) {
-            this.resize(); // if adding to the list would make it more than 60% full, resize the list now to avoid hash problems
-        }
         const hash = this.hash(entry.key); 
-        if (!this.table.hasOwnProperty(hash)) { // if table doesn't already have that hash
-            this.table[hash] = new LinkedList(); // add the hash as a key to table and initialize to empty LinkedList
+        if (!this.table.hasOwnProperty(hash)) {
+            this.table[hash] = new LinkedList(); 
         }
         if (!this.table[hash].includes(entry.key)) {
-            this.size++; // if the provided key doesn't already exist at that hash
-        } // we can increment the size to add it
-        this.table[hash].addToHead(entry); // finally we add the entry into the linkedList
+            this.size++; 
+        } 
+        this.table[hash].addToHead(entry); 
+        if (this.size / this.maxSize >= .6) {
+            this.resize(); 
+        }
+    }
+
+    insert(entry) { // alias
+        this.add(entry);
+    }
+
+    push(entry) { // alias
+        this.add(entry);
     }
 
     search(key) {
@@ -126,6 +134,10 @@ class HashTable {
         } else {
             return null;
         }
+    }
+
+    find(key) { // alias
+        this.search(key);
     }
 
     resize() {
@@ -149,6 +161,12 @@ class HashTable {
         Object.keys(this.table).forEach(key => {
             console.log(key, this.table[key].printList()); 
         });
+        console.log(`Size: ${this.size} out of ${this.maxSize}.`, 
+        `Next resize at ${Math.ceil(this.maxSize * .6)}.`);
+    }
+
+    print() {
+        this.printTable();
     }
 }
 
@@ -191,5 +209,3 @@ for (let i = 0; i < entries.length; i++) {
 }
 
 myHashTable.printTable();
-console.log(myHashTable.getSize());
-console.log(myHashTable.search('hugo manning') == myHashTable.search('Hugo Manning'));

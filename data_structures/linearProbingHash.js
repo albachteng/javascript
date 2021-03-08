@@ -106,8 +106,6 @@ for (person of morePeople) {
 console.log(peopleHash);
 
 // add() should update when it has the same key
-// linear probing ichromenstead of separate chaining? 
-// separate chaining - use a linked list data structure
 // include aliases? add = insert = push?
 // probing function P(x) = x is a common choice
 // keep alpha (the threshold factor) as a property of the hashtable?
