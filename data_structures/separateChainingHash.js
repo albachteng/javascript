@@ -75,6 +75,9 @@ class HashTable {
         this.maxSize = maxSize;
         this.size = 0; 
     }
+    getSize() {
+        return this.size;
+    }
 
     nextPrime(prime) { 
         if (prime > 2) {
@@ -148,19 +151,37 @@ class HashTable {
     }
 }
 
-const entries = [
-    new HashEntry('alpha', 2),
-    new HashEntry('beta', 12),
-    new HashEntry('zeta', 21),
-    new HashEntry('omega', 7),
-    new HashEntry('epsilon', 18),
-    new HashEntry('phi', 6),
-    new HashEntry('rho', 5),
-    new HashEntry('pi', 10),
-    new HashEntry('delta', 17),
-    new HashEntry('gamma', 14),
-    new HashEntry('omicron', 9),
-]
+const names = ['Max Willis','Tamara Chapman', 'Kelli Carroll',
+    'Philip Holloway','Elvira Harrison','Franklin Jordan','Lela Mitchell',
+    'Terrell Peterson','Judith Gill','Cindy Mills','Myron Robertson',
+    'Alyssa Cobb','Eva Quinn','Jan Gibson','Shirley Wilkins',
+    'Joanna Tyler','Paulette Farmer','Boyd Baker','Ricardo Watson',
+    'Michele Martinez','Monique Singleton','Tyler Chavez','Marcos Robinson',
+    'Dale Bennett','Joey Clayton','Marian Todd','Cary Kelly',
+    'Diana Woods','Carlton Mclaughlin','Frankie Stewart','Hugo Manning',
+    'Roy Graham','Megan Wise','May Allen','Olivia Rivera',
+    'Margarita Kennedy','Sheryl Castillo','Dwayne Flowers','Harry Welch',
+    'Jessica Garza','Israel Turner','Albert Jimenez','Aubrey Rowe',
+    'Noah Ball','Caleb Hunter','Ed Burns','Lynne Mcdonald',
+    'Lori Parker','Sonia Porter','Stephanie Roy','Krystal Clark',
+    'Chris Chambers','Belinda Lyons','Wilson Townsend','Jimmy Mccormick',
+    'Calvin Scott','Alma Gibbs','Rex Copeland','Dewey Moore',
+    'Felix Powers','Frederick Hansen','Dorothy Green','Maxine Schneider',
+    'Antonia Doyle','Randal Weaver','Eula Norton','Cecilia Aguilar',
+    'Cecelia Hammond','Monica Walters','Allan Phelps','Shaun Tucker',
+    'Clark Warner','Johanna Barnett','Leigh Alvarez','Wilma Edwards',
+    'Tabitha Hunt','Darrell French','Beulah Richards','Salvador West',
+    'Charlotte Robbins','Phil Wilkerson','Judy Austin','Jamie Reid',
+    'Loretta Mcgee','Cora Pittman','Clifton Hart','Connie Palmer',
+    'Traci Lee','Geoffrey Moreno','Lynn Medina','Sandra Vasquez',
+    'Benjamin Gilbert','Alberto Schmidt','Vernon Thompson','Antoinette Hamilton',
+    'Susan Gordon','Orlando Benson','Lamar Hicks','Lucy Young',
+    'Gladys King'];
+
+const entries = [];
+for (let i = 0; i < names.length; i++) {
+    entries.push(new HashEntry(names[i], Math.floor(Math.random() * 100)));
+}
 
 let myHashTable = new HashTable();
 
@@ -169,3 +190,5 @@ for (let i = 0; i < entries.length; i++) {
 }
 
 myHashTable.printTable();
+console.log(myHashTable.getSize());
+console.log(myHashTable.search('hugo manning'));

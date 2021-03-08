@@ -1,13 +1,11 @@
-
-
 class HashTable {
-    constructor(slots = 10) {
-        this.slots = slots;
+    constructor(maxSize = 10) {
+        this.maxSize = maxSize;
         this.size = 0;
-        this.bucket = [];
-        for (let i = 0; i < this.slots; i++) {
-            this.bucket[i] = null; 
-        } // initialize all buckets for the given number of slots to null
+        this.table = [];
+        for (let i = 0; i < this.maxSize; i++) {
+            this.table[i] = null; 
+        } // initialize all tables for the given number of maxSize to null
     }
     getSize() {
         return this.size;
@@ -20,20 +18,20 @@ class HashTable {
         for (let i = 0; i < key.length; i++) {
             index += index + key.charCodeAt(i);
         }
-        return index % this.slots;
+        return index % this.maxSize;
     }
     double() {
-        // doubles slots when size reaches 60% of slots 
-        this.slots*= 2;
-        console.log(this.slots);
-        let oldBucket = this.bucket;
-        let newBucket = [];
-        for (let i = 0; i < this.slots; i++) {
-            newBucket[i] = null; 
-        } // create a newBucket of the appropriate size
-        this.bucket = newBucket;
+        // doubles maxSize when size reaches 60% of maxSize 
+        this.maxSize*= 2;
+        console.log(this.maxSize);
+        let oldtable = this.table;
+        let newtable = [];
+        for (let i = 0; i < this.maxSize; i++) {
+            newtable[i] = null; 
+        } // create a newtable of the appropriate size
+        this.table = newtable;
         this.size = 0; // reset size to zero or else the copying below will throw off the count
-        oldBucket.forEach(index => {
+        oldtable.forEach(index => {
             if (index) {
                 Object.keys(index).forEach(key => {
                     this.add(key, index[key]);
@@ -41,32 +39,32 @@ class HashTable {
         }});
     }
     add(key, value) {
-        if (this.size >= .6 * this.slots) {
+        if (this.size >= .6 * this.maxSize) {
             this.double();
         }
         const hash = this.getIndex(key);
-        if (!this.bucket[hash]) {
-            this.bucket[hash] = {};
+        if (!this.table[hash]) {
+            this.table[hash] = {};
         }
-        if (!this.bucket[hash].hasOwnProperty(key)) {
+        if (!this.table[hash].hasOwnProperty(key)) {
             this.size++;
         }
-        this.bucket[hash][key] = value;
+        this.table[hash][key] = value;
     }
     search(key) {
         const hash = this.getIndex(key);
-        if (this.bucket[hash] && this.bucket[hash].hasOwnProperty(key)) {
-            return this.bucket[hash][key];
+        if (this.table[hash] && this.table[hash].hasOwnProperty(key)) {
+            return this.table[hash][key];
         } else {
             return null;
         }
     }
     delete(key) {
         const hash = this.getIndex(key); 
-        if (this.bucket[hash] && this.bucket[hash].hasOwnProperty(key)) {
-            delete this.bucket[hash][key]; // should return true
-            if (this.bucket[hash] && Object.keys(this.bucket[hash]).length === 0) {
-                this.bucket[hash] = null; 
+        if (this.table[hash] && this.table[hash].hasOwnProperty(key)) {
+            delete this.table[hash][key]; // should return true
+            if (this.table[hash] && Object.keys(this.table[hash]).length === 0) {
+                this.table[hash] = null; 
             }
         } else {
             return null;
