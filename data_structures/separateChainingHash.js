@@ -50,7 +50,7 @@ class LinkedList {
     includes(key) {
         let currentEntry = this.head;
         while (currentEntry) {
-            if (currentEntry.key === key) {
+            if (currentEntry.key.toLowerCase() === key.toLowerCase()) {
                 return true;
             } else {
                 currentEntry = currentEntry.getNextEntry();
@@ -60,7 +60,7 @@ class LinkedList {
     getEntryByKey(key) {
         let currentEntry = this.head;
         while (currentEntry) {
-            if (currentEntry.key === key) {
+            if (currentEntry.key.toLowerCase() === key.toLowerCase()) {
                 return currentEntry;
             } else {
                 currentEntry = currentEntry.getNextEntry();
@@ -75,6 +75,7 @@ class HashTable {
         this.maxSize = maxSize;
         this.size = 0; 
     }
+
     getSize() {
         return this.size;
     }
@@ -95,10 +96,11 @@ class HashTable {
         return prime === 2 ? 3 : 2; 
     }
 
-    hash(key) { 
+    hash(key) {
+        let name = key.toLowerCase();
         let output = 0;
-        for (let i = 0; i < key.toString().length; i++) {
-            output += key.charCodeAt(i);
+        for (let i = 0; i < name.length; i++) {
+            output += name.charCodeAt(i);
         }
         return output % this.maxSize; // which will be a prime number because of our resizing function
     }
@@ -121,7 +123,6 @@ class HashTable {
         const hash = this.hash(key);
         if (this.table.hasOwnProperty(hash) && this.table[hash].includes(key)) {
             return this.table[hash].getEntryByKey(key);
-// remember that we have to check to make sure the hash AND the key exist, since a hash could contain a number of entries
         } else {
             return null;
         }
@@ -191,4 +192,4 @@ for (let i = 0; i < entries.length; i++) {
 
 myHashTable.printTable();
 console.log(myHashTable.getSize());
-console.log(myHashTable.search('hugo manning'));
+console.log(myHashTable.search('hugo manning') == myHashTable.search('Hugo Manning'));
