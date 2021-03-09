@@ -87,15 +87,20 @@ class HashTable {
         return null;
     }
     delete(key) {
-        const hash = this.getIndex(key); 
-        if (this.table[hash] && this.table[hash].hasOwnProperty(key)) {
-            delete this.table[hash][key]; // should return true
-            if (this.table[hash] && Object.keys(this.table[hash]).length === 0) {
-                this.table[hash] = null; 
+        const keyhash = this.getIndex(key);
+        let index = keyhash;
+        let x = 1;
+        while (this.table[index] != null) {
+            if (this.table[index].hasOwnProperty(key)) {
+                let deleted = this.table[index];
+                this.table[index] = null;
+                return deleted; 
+            } else {
+                index = (keyhash + this.p(x)) % this.maxSize;
+                x++; 
             }
-        } else {
-            return null;
         }
+        return null;
     }
 }
 
@@ -137,8 +142,9 @@ peopleList.forEach(person => {
     peopleHash.add(person.name, person.score);
 })
 
-console.log(peopleHash);
-console.log(peopleHash.search('Joey Clayton')); 
+console.log(peopleHash.table);
+console.log(peopleHash.delete('Elvira Harrison')); 
+console.log(peopleHash.table);
 
 // add() should update when it has the same key
 // include aliases? add = insert = push?
