@@ -94,6 +94,7 @@ class HashTable {
             if (this.table[index].hasOwnProperty(key)) {
                 let deleted = this.table[index];
                 this.table[index] = null;
+                this.size--;
                 return deleted; 
             } else {
                 index = (keyhash + this.p(x)) % this.maxSize;
@@ -101,6 +102,18 @@ class HashTable {
             }
         }
         return null;
+    }
+    remove(key) { // alias;
+        this.delete(key);
+    }
+    print() {
+        for (let i = 0; i < this.table.length; i++) {
+            if (this.table[i] != null) {
+                console.log(`Index: ${i} || ${JSON.stringify(this.table[i])}`);
+            }
+        }
+        console.log(`Current size: ${this.size} || Current capacity: ${this.maxSize}`);
+        console.log(`Next resize at ${Math.ceil(this.maxSize * .6)}`);
     }
 }
 
@@ -144,11 +157,10 @@ peopleList.forEach(person => {
 
 console.log(peopleHash.table);
 console.log(peopleHash.delete('Elvira Harrison')); 
-console.log(peopleHash.table);
+console.log(peopleHash.print()); 
 
 // add() should update when it has the same key
-// include aliases? add = insert = push?
 // probing function P(x) = x is a common choice
 // keep alpha (the threshold factor) as a property of the hashtable?
-// memoize hash values to make co pying / doubling faster
+// memoize hash values to make copying / doubling faster?
 
