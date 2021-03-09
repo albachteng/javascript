@@ -13,12 +13,18 @@ class HashTable {
     isEmpty() {
         return this.getSize() == 0;
     }
-    getIndex(key) {
+    getIndex(key) {  
         let index = 0;
         for (let i = 0; i < key.length; i++) {
             index += index + key.charCodeAt(i);
         }
         return index % this.maxSize;
+    }
+    hash(key) { // alias
+        this.getIndex(key);
+    }
+    p(key, x) { // probing function
+        // 
     }
     double() {
         // doubles maxSize when size reaches 60% of maxSize 
@@ -38,18 +44,34 @@ class HashTable {
                 })
         }});
     }
+    resize() { // alias
+        this.double(); 
+    }
     add(key, value) {
         if (this.size >= .6 * this.maxSize) {
             this.double();
         }
-        const hash = this.getIndex(key);
-        if (!this.table[hash]) {
-            this.table[hash] = {};
+        let x = 1;
+        let keyhash = this.getIndex(key)
+        const index = keyhash;
+        // while (this.table[index] != null) {
+        //  index = (keyhash + this.p(key, x)) % this.maxSize;
+        //  x++;
+        // } 
+        // insert as below...? 
+        if (!this.table[index]) {
+            this.table[index] = {};
         }
-        if (!this.table[hash].hasOwnProperty(key)) {
+        if (!this.table[index].hasOwnProperty(key)) {
             this.size++;
         }
-        this.table[hash][key] = value;
+        this.table[index][key] = value;
+    }
+    insert() { // alias
+        this.add();
+    }
+    push() { // alias
+        this.add(); 
     }
     search(key) {
         const hash = this.getIndex(key);

@@ -26,7 +26,12 @@ when you reach a collision, use a separate function (*“probing function”*) t
 The important thing is to avoid *cycles* with your probing function [P(x)] that are smaller than the current max-length of the hash table. It’s best, in fact, if the cycle is *exactly* as large as the table. How do you do that? It depends on the method…
 
 ## Linear: 
-P(x) = ax - for which values of the constant a will this function produce a full cycle modulo N? A: when a and N are relatively prime, meaning their greatest common denominator is 1. 
+P(x) = ax
+
+The *load factor* is generally represented by *alpha* (a here) and refers to the ratio: (# of items in the table / current max size of the table).
+
+Q: for which values of the constant *a* will this function produce a full cycle modulo N? 
+A: when a and N are relatively prime, meaning their greatest common denominator is 1. 
 
 ## Quadratic: 
 
