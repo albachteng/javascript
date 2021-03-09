@@ -31,7 +31,7 @@ P(x) = ax
 The *load factor* is generally represented by *alpha* (a here) and refers to the ratio: (# of items in the table / current max size of the table).
 
 Q: for which values of the constant *a* will this function produce a full cycle modulo N? 
-A: when a and N are relatively prime, meaning their greatest common denominator is 1. 
+A: when a and N are *relatively prime*, meaning their *greatest common denominator is 1.* 
 
 ## Quadratic: 
 

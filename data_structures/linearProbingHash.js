@@ -23,8 +23,8 @@ class HashTable {
     hash(key) { // alias
         this.getIndex(key);
     }
-    p(key, x) { // probing function
-        // 
+    p(x) { // probing function
+        return x;
     }
     double() {
         // doubles maxSize when size reaches 60% of maxSize 
@@ -53,12 +53,11 @@ class HashTable {
         }
         let x = 1;
         let keyhash = this.getIndex(key)
-        const index = keyhash;
-        // while (this.table[index] != null) {
-        //  index = (keyhash + this.p(key, x)) % this.maxSize;
-        //  x++;
-        // } 
-        // insert as below...? 
+        let index = keyhash;
+        while (this.table[index] != null) {
+            index = (keyhash + this.p(x)) % this.maxSize;
+            x++;
+        } 
         if (!this.table[index]) {
             this.table[index] = {};
         }
@@ -94,38 +93,46 @@ class HashTable {
     }
 }
 
-const peopleList = [{name: 'bob', age: 12}, 
-                    {name: 'sally', age: 18}, 
-                    {name: 'constance', age: 32}, 
-                    {name: 'george', age: 35}, 
-                    {name: 'sam', age: 15},
-                    {name: 'harry', age: 22},
-                    {name: 'bill', age: 5},
-                    {name: 'peter', age: 16},
-                    {name: 'luis', age: 54},
-                    {name: 'gustavo', age: 19},
-                    {name: 'gilgamesh', age: 20}];
+const names = ['Max Willis','Tamara Chapman', 'Kelli Carroll',
+    'Philip Holloway','Elvira Harrison','Franklin Jordan','Lela Mitchell',
+    'Terrell Peterson','Judith Gill','Cindy Mills','Myron Robertson',
+    'Alyssa Cobb','Eva Quinn','Jan Gibson','Shirley Wilkins',
+    'Joanna Tyler','Paulette Farmer','Boyd Baker','Ricardo Watson',
+    'Michele Martinez','Monique Singleton','Tyler Chavez','Marcos Robinson',
+    'Dale Bennett','Joey Clayton','Marian Todd','Cary Kelly',
+    'Diana Woods','Carlton Mclaughlin','Frankie Stewart','Hugo Manning',
+    'Roy Graham','Megan Wise','May Allen','Olivia Rivera',
+    'Margarita Kennedy','Sheryl Castillo','Dwayne Flowers','Harry Welch',
+    'Jessica Garza','Israel Turner','Albert Jimenez','Aubrey Rowe',
+    'Noah Ball','Caleb Hunter','Ed Burns','Lynne Mcdonald',
+    'Lori Parker','Sonia Porter','Stephanie Roy','Krystal Clark',
+    'Chris Chambers','Belinda Lyons','Wilson Townsend','Jimmy Mccormick',
+    'Calvin Scott','Alma Gibbs','Rex Copeland','Dewey Moore',
+    'Felix Powers','Frederick Hansen','Dorothy Green','Maxine Schneider',
+    'Antonia Doyle','Randal Weaver','Eula Norton','Cecilia Aguilar',
+    'Cecelia Hammond','Monica Walters','Allan Phelps','Shaun Tucker',
+    'Clark Warner','Johanna Barnett','Leigh Alvarez','Wilma Edwards',
+    'Tabitha Hunt','Darrell French','Beulah Richards','Salvador West',
+    'Charlotte Robbins','Phil Wilkerson','Judy Austin','Jamie Reid',
+    'Loretta Mcgee','Cora Pittman','Clifton Hart','Connie Palmer',
+    'Traci Lee','Geoffrey Moreno','Lynn Medina','Sandra Vasquez',
+    'Benjamin Gilbert','Alberto Schmidt','Vernon Thompson','Antoinette Hamilton',
+    'Susan Gordon','Orlando Benson','Lamar Hicks','Lucy Young',
+    'Gladys King'];
+
+const peopleList = [];
+for (let i = 0; i < names.length; i++) {
+    peopleList[i] = {name: names[i], score: Math.ceil(Math.random() * 100)};
+}
+console.log(peopleList.length);
+
 const peopleHash = new HashTable;
-console.log(peopleHash.isEmpty()); // expect true
-for (person of peopleList) {
-    peopleHash.add(person.name, person.age);
-}
+peopleList.forEach(person => {
+    peopleHash.add(person.name, person.score);
+})
+
 console.log(peopleHash);
-console.log(peopleHash.getSize(), peopleHash.isEmpty()); // 11, false
-console.log(peopleHash.search('gustavo')); // 19 (his age)
-peopleHash.delete('constance'); 
-console.log(peopleHash.search('constance')); // null
-console.log(peopleHash);
-const morePeople = [{name: 'fritz', age: 9},
-                    {name: 'clara', age: 12},
-                    {name: 'bobby', age: 27},
-                    {name: 'amanda', age: 29},
-                    {name: 'andrew', age: 31},
-                    {name: 'graham', age: 30}];
-for (person of morePeople) {
-    peopleHash.add(person.name, person.age);
-}
-console.log(peopleHash);
+console.log(peopleHash.search('Joey Clayton')); 
 
 // add() should update when it has the same key
 // include aliases? add = insert = push?
