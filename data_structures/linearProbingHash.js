@@ -73,12 +73,18 @@ class HashTable {
         this.add(); 
     }
     search(key) {
-        const hash = this.getIndex(key);
-        if (this.table[hash] && this.table[hash].hasOwnProperty(key)) {
-            return this.table[hash][key];
-        } else {
-            return null;
+        let x = 1;
+        let keyhash = this.getIndex(key);
+        let index = keyhash;
+        while (this.table[index] != null) {
+            if (this.table[index].hasOwnProperty(key)) {
+                return this.table[index];
+            } else {
+                index = (keyhash + this.p(x)) % this.maxSize;
+                x++;
+            }
         }
+        return null;
     }
     delete(key) {
         const hash = this.getIndex(key); 
