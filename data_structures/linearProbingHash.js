@@ -38,7 +38,7 @@ class HashTable {
         this.table = newTable;
         this.size = 0; // reset size to zero or else the copying below will throw off the count
         oldTable.forEach(index => {
-            if (index) {
+            if (index && index != 'TOMBSTONE') {
                 Object.keys(index).forEach(key => {
                     this.add(key, index[key]);
                 })
@@ -51,8 +51,7 @@ class HashTable {
         if (this.size >= .6 * this.maxSize) {
             this.double();
         }
-        let j = -1;
-        let x = 0;
+        let j = -1, x = 0;
         let keyhash = this.getIndex(key)
         let index = keyhash;
 
@@ -201,7 +200,14 @@ peopleHash.delete('Marian Todd');
 peopleHash.delete('Cary Kelly');
 console.log(peopleHash.table);
 
+for (let i = 41; i < 60; i++) {
+    peopleList[i] = {name: names[i], score: Math.ceil(Math.random() * 100)};
+    peopleHash.insert(peopleList[i].name, peopleList[i].score);
+}
 
+console.log(peopleHash.table);
+peopleHash.delete('Elvira Harrison');
+peopleHash.print();
 
 // add() should update when it has the same key
 // probing function P(x) = x is a common choice
