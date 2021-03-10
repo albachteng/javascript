@@ -30,14 +30,14 @@ class HashTable {
         // doubles maxSize when size reaches 60% of maxSize 
         this.maxSize*= 2;
         console.log(this.maxSize);
-        let oldtable = this.table;
-        let newtable = [];
+        let oldTable = this.table;
+        let newTable = [];
         for (let i = 0; i < this.maxSize; i++) {
-            newtable[i] = null; 
-        } // create a newtable of the appropriate size
-        this.table = newtable;
+            newTable[i] = null; 
+        } // create a newTable of the appropriate size
+        this.table = newTable;
         this.size = 0; // reset size to zero or else the copying below will throw off the count
-        oldtable.forEach(index => {
+        oldTable.forEach(index => {
             if (index) {
                 Object.keys(index).forEach(key => {
                     this.add(key, index[key]);
@@ -51,25 +51,53 @@ class HashTable {
         if (this.size >= .6 * this.maxSize) {
             this.double();
         }
-        let x = 1;
+        let j = -1;
+        let x = 0;
         let keyhash = this.getIndex(key)
         let index = keyhash;
-        while (this.table[index] != null) {
-            index = (keyhash + this.p(x)) % this.maxSize;
-            x++;
-        } 
-        if (!this.table[index]) {
-            this.table[index] = {};
-        }
-        if (!this.table[index].hasOwnProperty(key)) {
-            this.size++;
-        }
-        this.table[index][key] = value;
+
+        do {
+            // current slot was previously deleted
+            if (this.table[index] == "TOMBSTONE") {
+                if (j == -1) j = i; // remember where we found the first tombstone
+            // current cell contains a key already
+            } else if (this.table[index] != null) {
+                // if the key we're inserting already exists, we update it
+                if (this.table[index].hasOwnProperty(key)) {
+                    let oldValue = this.table[index];
+                    if (j == -1) {
+                        this.table[index][key] = value;
+                    } else {
+                        // swap with the TOMBSTONE we found earlier
+                        this.table[index] = "TOMBSTONE";
+                        this.table[j] = {};
+                        this.table[j][key] = value;  
+                    }
+                    this.size++;
+                    return oldValue;
+                }
+            // current cell is null
+            } else {
+                // if no tombstones yet
+                if (j == -1) {
+                    this.size++;
+                    this.table[index] = {};
+                    this.table[index][key] = value;
+                // if we found a tombstone
+                } else {
+                    this.size++;
+                    this.table[j] = {};
+                    this.table[j][key] = value; 
+                }
+                return null;
+            }
+            index = (keyhash + this.p(x++)) % this.maxSize;
+        } while (true);
     }
     insert() { // alias
         this.add();
     }
-    push() { // alias
+    put() { // alias
         this.add(); 
     }
     search(key) {
@@ -148,7 +176,6 @@ const peopleList = [];
 for (let i = 0; i < names.length; i++) {
     peopleList[i] = {name: names[i], score: Math.ceil(Math.random() * 100)};
 }
-console.log(peopleList.length);
 
 const peopleHash = new HashTable;
 peopleList.forEach(person => {
@@ -163,4 +190,7 @@ console.log(peopleHash.print());
 // probing function P(x) = x is a common choice
 // keep alpha (the threshold factor) as a property of the hashtable?
 // memoize hash values to make copying / doubling faster?
-
+// additional functionalities: 
+    // clear function to empty the table
+    // error handling (no negative or zero capacity, no null keys, etc)
+    // collision count? could be interesting for testing

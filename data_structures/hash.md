@@ -13,9 +13,7 @@ We try very hard to make *uniform* hash functions to minimize the number of *col
 
 Keys you use must be *immutable* - they cannot be changed. 
 
-## Hash collisions: 
-
-### Separate Chaining: 
+## Separate Chaining: 
 using a separate, auxiliary data structure like a linked list (most common) or a binary tree, etc. Hybrid approaches exist that switch from a linked list to a balanced binary search tree after the linked list gets too long for a single hash value.
 
 Once there are too many elements, best practice is to create a new HT with a larger capacity and re-hash them into the new larger table
@@ -25,7 +23,7 @@ when you reach a collision, use a separate function (*“probing function”*) t
 
 The important thing is to avoid *cycles* with your probing function [P(x)] that are smaller than the current max-length of the hash table. It’s best, in fact, if the cycle is *exactly* as large as the table. How do you do that? It depends on the method…
 
-## Linear: 
+### Linear: 
 P(x) = ax
 
 The *load factor* is generally represented by *alpha* (a here) and refers to the ratio: (# of items in the table / current max size of the table).
@@ -33,7 +31,7 @@ The *load factor* is generally represented by *alpha* (a here) and refers to the
 Q: for which values of the constant *a* will this function produce a full cycle modulo N? 
 A: when a and N are *relatively prime*, meaning their *greatest common denominator is 1.* 
 
-## Quadratic: 
+### Quadratic: 
 
 Three methods. 
 
@@ -41,7 +39,7 @@ Three methods.
 	2) P(x) = (x^2 + x) / 2 and *keep the table size a power of two*; (seems like the most straightforward to implement) 
 	3) P(x) = (-1)^x * x^2 and keep the table size a prime N where N is congruent to 3 mod 4 (?)
 
-## Double Hashing:
+### Double Hashing:
 
 Double hashing reduces to linear probing except that the constant is unknown until computed at runtime. 
 
@@ -53,8 +51,8 @@ B/c it reduces to linear probing at runtime, we may end up with cycles in the sa
 
     Delta = H2(k) mod N [where N is the current size of the Hash Table]
 
-If delta = 0, set it to 1 instead, since a delta of 0 guarantees a cycle. 
+If delta = 0, set it to 1 instead, since a delta of 0 guarantees a cycle.
 
 Since N is a prime number, delta will be between 1 and N (not inclusive of N) meaning the greatest common factor will always be 1, preventing cycles. 
 
-When doubling the size of the table, you must find the next prime number to maintain this property. 
+When increasing the size of the table, you must find the next prime number to maintain this property. 
