@@ -59,7 +59,7 @@ class HashTable {
         do {
             // current slot was previously deleted
             if (this.table[index] == "TOMBSTONE") {
-                if (j == -1) j = i; // remember where we found the first tombstone
+                if (j == -1) j = index; // remember where we found the first tombstone
             // current cell contains a key already
             } else if (this.table[index] != null) {
                 // if the key we're inserting already exists, we update it
@@ -94,41 +94,46 @@ class HashTable {
             index = (keyhash + this.p(x++)) % this.maxSize;
         } while (true);
     }
-    insert() { // alias
-        this.add();
+    insert(key, value) { // alias
+        this.add(key, value);
     }
     put() { // alias
-        this.add(); 
+        this.add(key, value); 
     }
     search(key) {
-        let x = 1;
+        if (key == null) throw new Error("Null key");
+        let x = 0;
         let keyhash = this.getIndex(key);
         let index = keyhash;
         while (this.table[index] != null) {
             if (this.table[index].hasOwnProperty(key)) {
                 return this.table[index];
             } else {
-                index = (keyhash + this.p(x)) % this.maxSize;
-                x++;
+                index = (keyhash + this.p(x++)) % this.maxSize;
             }
         }
         return null;
     }
     delete(key) {
+        if (key == null) throw new Error("Null key");
         const keyhash = this.getIndex(key);
         let index = keyhash;
-        let x = 1;
+        let x = 0;
         while (this.table[index] != null) {
+            // it has our object
             if (this.table[index].hasOwnProperty(key)) {
                 let deleted = this.table[index];
-                this.table[index] = null;
+                // our "something here was deleted" placeholder
+                this.table[index] = "TOMBSTONE";
                 this.size--;
+                // return deleted in case we need it
                 return deleted; 
             } else {
-                index = (keyhash + this.p(x)) % this.maxSize;
-                x++; 
+                // keep probing if that returned 'TOMBSTONE' or a different object
+                index = (keyhash + this.p(x++)) % this.maxSize;
             }
         }
+        // does not exist
         return null;
     }
     remove(key) { // alias;
@@ -173,7 +178,7 @@ const names = ['Max Willis','Tamara Chapman', 'Kelli Carroll',
     'Gladys King'];
 
 const peopleList = [];
-for (let i = 0; i < names.length; i++) {
+for (let i = 0; i < 20; i++) {
     peopleList[i] = {name: names[i], score: Math.ceil(Math.random() * 100)};
 }
 
@@ -183,8 +188,20 @@ peopleList.forEach(person => {
 })
 
 console.log(peopleHash.table);
-console.log(peopleHash.delete('Elvira Harrison')); 
-console.log(peopleHash.print()); 
+
+for (let i = 21; i < 40; i++) {
+    peopleList[i] = {name: names[i], score: Math.ceil(Math.random() * 100)};
+    peopleHash.insert(peopleList[i].name, peopleList[i].score);
+}
+
+console.log(peopleHash.table);
+peopleHash.delete('Marcos Robinson');
+peopleHash.delete('Shirley Wilkins');
+peopleHash.delete('Marian Todd');
+peopleHash.delete('Cary Kelly');
+console.log(peopleHash.table);
+
+
 
 // add() should update when it has the same key
 // probing function P(x) = x is a common choice
