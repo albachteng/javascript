@@ -1,6 +1,7 @@
 class HashTable {
-    constructor(maxSize = 10) {
+    constructor(maxSize = 10, resizeThreshold = .6) {
         this.maxSize = maxSize;
+        this.resizeThreshold = resizeThreshold;
         this.size = 0;
         this.table = [];
         for (let i = 0; i < this.maxSize; i++) {
@@ -48,7 +49,7 @@ class HashTable {
         this.double(); 
     }
     add(key, value) {
-        if (this.size >= .6 * this.maxSize) {
+        if (this.size >= this.resizeThreshold * this.maxSize) {
             this.double();
         }
         let j = -1, x = 0;
@@ -154,7 +155,7 @@ class HashTable {
             }
         }
         console.log(`Current size: ${this.size} || Current capacity: ${this.maxSize}`);
-        console.log(`Next resize at ${Math.ceil(this.maxSize * .6)}`);
+        console.log(`Next resize at ${Math.ceil(this.maxSize * this.resizeThreshold)}`);
     }
 }
 
