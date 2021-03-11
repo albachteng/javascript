@@ -14,6 +14,18 @@ class HashTable {
     isEmpty() {
         return this.getSize() == 0;
     }
+    getAlpha() {
+        return this.resizeThreshold;
+    }
+    getResizeThreshold() { // alias
+        this.getAlpha();
+    }
+    setAlpha(alpha) {
+        this.resizeThreshold = alpha;
+    }
+    setResizeThreshold(alpha) { // alias
+        this.setAlpha(alpha);
+    }
     getIndex(key) {  
         let index = 0;
         for (let i = 0; i < key.length; i++) {
@@ -219,7 +231,6 @@ console.log(peopleHash.table);
 peopleHash.delete('Elvira Harrison');
 peopleHash.print();
 
-// keep alpha (the threshold factor) as a property of the hashtable? more maintainable
 // memoize hash indices to make copying / doubling faster?
 // additional functionalities: 
     // error handling (no negative or zero capacity, no null keys, etc)
