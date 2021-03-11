@@ -54,7 +54,7 @@ class HashTable {
             if (index && index != 'TOMBSTONE') {
                 Object.keys(index).forEach(key => {
                     this.add(key, index[key]);
-                })
+                });
         }});
     }
     resize() { // alias
