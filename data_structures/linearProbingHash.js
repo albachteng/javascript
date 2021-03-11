@@ -58,7 +58,8 @@ class HashTable {
         do {
             // current slot was previously deleted
             if (this.table[index] == "TOMBSTONE") {
-                if (j == -1) j = index; // remember where we found the first tombstone
+                // remember where we found the first tombstone
+                if (j == -1) j = index; 
             // current cell contains a key already
             } else if (this.table[index] != null) {
                 // if the key we're inserting already exists, we update it
@@ -135,8 +136,16 @@ class HashTable {
         // does not exist
         return null;
     }
-    remove(key) { // alias;
+    remove(key) { // alias
         this.delete(key);
+    }
+    clear() {
+        this.maxSize = 10;
+        this.size = 0;
+        this.table = [];
+        for (let i = 0; i < this.maxSize; i++) {
+            this.table[i] = null; 
+        }
     }
     print() {
         for (let i = 0; i < this.table.length; i++) {
@@ -209,11 +218,8 @@ console.log(peopleHash.table);
 peopleHash.delete('Elvira Harrison');
 peopleHash.print();
 
-// add() should update when it has the same key
-// probing function P(x) = x is a common choice
-// keep alpha (the threshold factor) as a property of the hashtable?
-// memoize hash values to make copying / doubling faster?
+// keep alpha (the threshold factor) as a property of the hashtable? more maintainable
+// memoize hash indices to make copying / doubling faster?
 // additional functionalities: 
-    // clear function to empty the table
     // error handling (no negative or zero capacity, no null keys, etc)
     // collision count? could be interesting for testing
