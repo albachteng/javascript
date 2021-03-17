@@ -1,6 +1,6 @@
 const fb = [];
 
-for (let i = 1; i < 17; i++) {
+for (let i = 1; i < 101; i++) {
     let result = '';
     if (i % 3 == 0) {
         result += 'fizz';
@@ -9,7 +9,7 @@ for (let i = 1; i < 17; i++) {
     if (i % 5 == 0) {
         result += 'buzz';
     }
-    else if (!result) {
+    if (!result) {
         result = i;
     }
     fb.push(result); 
