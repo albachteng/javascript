@@ -97,7 +97,7 @@ As soon as we start running our code, we create a *global execution context*
 ## running / calling / invoking a function (all the same thing)
 NOT the same as defining (or declaring) a function
 
-const output = multiplyBy2(4); __"declare a constant variable 'output' and set it equal to the _evaluated result_ of calling multiplyBy2 with 4 as argument."__
+***const output = multiplyBy2(4); __"declare a constant variable 'output' and set it equal to the _evaluated result_ of calling multiplyBy2 with 4 as argument."__
 
     --> the parentheses tell us that we're not done yet, we'll need a _*local execution context*_
     --> also called a "function level context" 
@@ -177,3 +177,15 @@ NTS: *_do not forget to return the accumulator at the end of your reducer functi
     - switch the driver / navigation role every 15 minutes
 
 ## closure
+
+*execution context*: environment in which js function is being executed
+    whenever a function is invoked, a new execution context is pushed onto the call stack and a new *variable environment* is created along with it. 
+
+*scope*: in js, variable environments. Code being executed inside a given spoke not only has access to the variables in that scope but also the variables in all scopes that encase it. 
+
+*closure*: a variable environment that has outlived its execution context and remains attached to a function that has also outlived the same execution context. 
+
+    -> closures give us the ability to gain the benefits of data privacy and data encapsulation
+    -> maintains secure and private access to variables by creating functions that are the only objects with access TO these variables. 
+    -> serves as a way of whitelisting the ways that those variables can be mutated
+    -> only the steps outlined in the created functions can operate on the variables in the closure
