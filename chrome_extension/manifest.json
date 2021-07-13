@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Focus",
+    "name": "Cookie Monster",
     "version": "1.0",
-    "description": "Replaces youtube contents with an image to remind you to get your lazy self back to work!",
+    "description": "Removes annoying cookie banners!",
     "content_scripts": [
         {
             "matches": ["https://www.youtube.com/*"],

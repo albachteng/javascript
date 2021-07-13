@@ -2,7 +2,7 @@ function factorial(num, product = {'0': 1, '1': 1, 'current': 1}) {
 	if (product[num]) return product[num]; 
     else {
     product[num] = factorial(num - 1, product);
-    return product['current'] *= num;
+    return product['currentf'] *= num;
   }
 }
 

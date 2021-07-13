@@ -1,7 +1,7 @@
-function fib(n, cache = {"0": 1, "1": 1}) {
+function fib(n, cache = {"0": 0, "1": 1}) {
     // if cache is not provided, the default value defines our base case
     // if we have the argument n cached, return that value (in constant time!)
-    if (cache[n]) return cache[n]; 
+    if (cache.hasOwnProperty(n)) return cache[n]; 
     // otherwise, return the value of cache[n] as we...
     // ...assign it the value of two recursive calls to fib
     // we must pass in the cache on each call, otherwise the data... 
