@@ -10,15 +10,14 @@ const reverseArray = (arr) => {
 // reverse an array without creating a new array by swapping items
 const reverseArrayInPlace = (arr) => {
 	for (let i = 0; i < Math.floor(arr.length/2); i++) {
-      let hold = arr[i];
-      arr[i] = arr[arr.length - 1 - i];
-      arr[arr.length - 1 - i] = hold;
+      const indexFromEnd = arr.length - 1 - i;
+      [arr[i], arr[indexFromEnd]] = [arr[indexFromEnd], arr[i]];
     }
+    return arr;
 }
 
 console.log(reverseArray(["A", "B", "C"]));
 // → ["C", "B", "A"];
-let arrayValue = [1, 2, 3, 4, 5];
-reverseArrayInPlace(arrayValue);
-console.log(arrayValue);
+const arrayValue = [1, 2, 3, 4, 5];
+console.log(reverseArrayInPlace(arrayValue));
 // → [5, 4, 3, 2, 1]
